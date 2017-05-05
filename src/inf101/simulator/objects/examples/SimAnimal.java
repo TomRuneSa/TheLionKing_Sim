@@ -29,12 +29,10 @@ public class SimAnimal extends AbstractMovingObject implements ISimListener {
 	private static final double MAX_ENERGY = 1.0;
 	private static final double MIN_ENERGY = 0.0;
 	private static final double VIEW_DISTANCE = 400;
-	private static final double VIEW_ANGLE = 40;
-	public static final Consumer<GraphicsContext> PAINTER = (GraphicsContext context) -> {
-		SimAnimal obj = new SimAnimal(new Position(0, 0), habitat);
-		context.scale(0.6 / obj.getWidth(), 0.8 / obj.getHeight());
-		obj.draw(context);
-	};
+	private static final double VIEW_ANGLE = 45;
+	private double nutrition = 1000.0;
+	private double barValue = 1.0;
+	public static final double NUTRITION_FACTOR = 100;
 
 	private ArrayList<IEdibleObject> food = new ArrayList<>();
 
@@ -47,8 +45,10 @@ public class SimAnimal extends AbstractMovingObject implements ISimListener {
 	@Override
 	public void draw(GraphicsContext context) {
 		super.draw(context);
+		context.translate(0, getHeight());
+		context.scale(1, -1);
 		context.drawImage(img, 1.0, 0.0, getWidth(), getHeight());
-		super.drawBar(context, energyLevel, 0, Color.PINK, Color.BLUE);
+		super.drawBar(context, barValue, 0, Color.PINK, Color.BLUE);
 		GraphicsHelper.strokeArcAt(context, getWidth() / 2, getHeight() / 2, VIEW_DISTANCE, 0, VIEW_ANGLE);
 		context.setStroke(Color.YELLOW.deriveColor(0.0, 1.0, 1.0, 0.5));
 	}
@@ -56,7 +56,7 @@ public class SimAnimal extends AbstractMovingObject implements ISimListener {
 	public IEdibleObject getBestFood() {
 		food.clear();
 		for (ISimObject obj : habitat.nearbyObjects(this, getRadius() + 400)) {
-			if (obj instanceof IEdibleObject) {
+			if (obj instanceof SimFeed) {
 				
 				double simRepAngle = this.getPosition().directionTo(obj.getPosition()).toAngle(); 
 				double simAngle = this.getDirection().toAngle();
@@ -81,7 +81,7 @@ public class SimAnimal extends AbstractMovingObject implements ISimListener {
 		ISimObject closestObject = null;
 		for (ISimObject obj : habitat.nearbyObjects(this, getRadius() + 400)) {
 
-			if (obj instanceof IEdibleObject) {
+			if (obj instanceof SimInsect) {
 				double tempDist = this.distanceTo(Position.makePos((obj).getX(), obj.getY()));
 				if (tempDist < shorttDist) {
 					closestObject = obj;
@@ -108,22 +108,25 @@ public class SimAnimal extends AbstractMovingObject implements ISimListener {
 	@Override
 	public void step() {
 
-		if (energyLevel > MIN_ENERGY) {
-			energyLevel -= 0.0009;
+		nutrition -= 0.3;
+//		System.out.println(nutrition);
+		barValue = nutrition / 1000;
+		if (nutrition < 0.1) {
+			 this.destroy();
 		}
 
 		IEdibleObject obj = getBestFood();
 		if (obj != null) {
 			dir = dir.turnTowards(super.directionTo(obj), 2);
 			if (this.distanceToTouch(obj) < 5) {
-				double howMuchToEat = obj.getNutritionalValue();
+				double howMuchToEat = 1 - barValue;
 				obj.eat(howMuchToEat);
-				if (energyLevel < MAX_ENERGY) {
-					energyLevel += howMuchToEat / 12;
+				if (barValue < MAX_ENERGY) {
+					nutrition += obj.getNutritionalValue();
 				}
 				SimEvent event = new SimEvent(this, "CUUUUNT", null, null);
 				habitat.triggerEvent(event);
-				energyLevel += howMuchToEat;
+			
 			}
 		}
 		for (ISimObject rep : habitat.allObjects()) {
@@ -135,6 +138,8 @@ public class SimAnimal extends AbstractMovingObject implements ISimListener {
 				}
 			}
 		}
+		//Goes toward center if 
+		dir = dir.turnTowards(directionTo(habitat.getCenter()), 0.5);
 
 		// go towards center if we're close to the border
 		if (!habitat.contains(getPosition(), getRadius() * 1.2)) {
@@ -146,9 +151,8 @@ public class SimAnimal extends AbstractMovingObject implements ISimListener {
 		}
 
 		accelerateTo(defaultSpeed, 0.1);
-
-		if (energyLevel < MIN_ENERGY) {
-			super.destroy();
+		if (nutrition < 0.1) {
+			 super.destroy();
 			SimEvent dead = new SimEvent(this, "DEAD CUNT", null, null);
 			habitat.triggerEvent(dead);
 		}

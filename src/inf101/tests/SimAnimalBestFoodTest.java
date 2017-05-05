@@ -27,10 +27,10 @@ public class SimAnimalBestFoodTest {
 	public void willFindBestFoodTest() {
 		Habitat hab = new Habitat(main, 500, 500);
 		SimAnimal sim1 = new SimAnimal(new Position(250, 250), hab);
-		SimFeed feed1 = new SimFeed(new Position(200, 250), 1.0);
-		SimFeed feed2 = new SimFeed(new Position(320, 250), .5);
-		SimFeed feed3 = new SimFeed(new Position(250, 320), 2.0);
-		SimFeed feed4 = new SimFeed(new Position(250, 220), 1.3);
+		SimFeed feed1 = new SimFeed(new Position(230, 270), 1.0);
+		SimFeed feed2 = new SimFeed(new Position(285, 249), .5);
+		SimFeed feed3 = new SimFeed(new Position(251, 225), 2.0);
+		SimFeed feed4 = new SimFeed(new Position(258, 215), 1.3);
 		hab.addObject(sim1);
 		hab.addObject(feed1);
 		hab.addObject(feed2);

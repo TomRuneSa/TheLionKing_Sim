@@ -40,8 +40,8 @@ import javafx.stage.Stage;
  */
 public class SimMain extends Application {
 	public static final double NOMINAL_WIDTH = 1900;
-	private static final double MENU_WIDTH = 100.00;
-	private static final double BUTTON_WIDTH = 75.00;
+	private static final double MENU_WIDTH = 43.00;
+	private static final double BUTTON_WIDTH = 30.00;
 	private static SimMain instance;
 	private static Map<String, ISimObjectFactory> factoryMap = new HashMap<>();
 	public static SimMain getInstance() {

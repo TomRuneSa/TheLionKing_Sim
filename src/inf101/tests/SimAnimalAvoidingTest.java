@@ -32,9 +32,10 @@ public class SimAnimalAvoidingTest {
 			hab.step();
 		}
 		// we're currently facing away from the repellant
-		assertTrue(Math.abs(sim1.getPosition().directionTo(rep1.getPosition()).toAngle() - sim1.getDirection().toAngle()) > 90);
 		for (int i = 0; i < 1000; i++) {
 			hab.step();
+			if(distanceTo)< 199)
+			assertTrue(Math.abs(sim1.getPosition().directionTo(rep1.getPosition()).toAngle() - sim1.getDirection().toAngle()) > 90);
 		}
 	}
 	/**

@@ -57,16 +57,23 @@ public class SimAnimal extends AbstractMovingObject implements ISimListener {
 		food.clear();
 		for (ISimObject obj : habitat.nearbyObjects(this, getRadius() + 400)) {
 			if (obj instanceof IEdibleObject) {
-				food.add((IEdibleObject) obj);
+				
+				double simRepAngle = this.getPosition().directionTo(obj.getPosition()).toAngle(); 
+				double simAngle = this.getDirection().toAngle();
+				double angle = angleFix(simRepAngle, simAngle); 
+				
+				if(angle < 45 && angle > -45)	{
+					food.add((IEdibleObject) obj);
+				}
 			}
 		}
-		if(food.size() == 0){
+		if (food.size() == 0) {
 			return null;
 		}
 		Compare compare = new Compare();
 		Collections.sort(food, compare);
-		return (IEdibleObject) food.get(food.size()-1);
-	
+		return (IEdibleObject) food.get(food.size() - 1);
+
 	}
 
 	public IEdibleObject getClosestFood() {
@@ -80,9 +87,9 @@ public class SimAnimal extends AbstractMovingObject implements ISimListener {
 					closestObject = obj;
 					shorttDist = tempDist;
 				}
-				
-			return (IEdibleObject) closestObject;
-		}
+
+				return (IEdibleObject) closestObject;
+			}
 		}
 
 		return null;
@@ -109,7 +116,7 @@ public class SimAnimal extends AbstractMovingObject implements ISimListener {
 		if (obj != null) {
 			dir = dir.turnTowards(super.directionTo(obj), 2);
 			if (this.distanceToTouch(obj) < 5) {
-				double howMuchToEat = obj.getNutritionalValue(); 
+				double howMuchToEat = obj.getNutritionalValue();
 				obj.eat(howMuchToEat);
 				if (energyLevel < MAX_ENERGY) {
 					energyLevel += howMuchToEat / 12;
@@ -152,6 +159,11 @@ public class SimAnimal extends AbstractMovingObject implements ISimListener {
 	@Override
 	public void eventHappened(SimEvent event) {
 		super.say(event.getType());
+
+	}
+	public double angleFix(double a, double b) {
+		double angle = ((((a - b) % 360) + 540) % 360) - 180; // stackoverflow
+		return angle;
 
 	}
 

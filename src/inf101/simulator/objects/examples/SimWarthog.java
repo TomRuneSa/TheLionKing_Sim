@@ -16,11 +16,11 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-public class SimBird extends AbstractMovingObject implements IEdibleObject {
+public class SimWarthog extends AbstractMovingObject implements IEdibleObject {
 	private static final double defaultSpeed = 1.0;
 	private static Habitat habitat;
 	private static final double NUTRITION_FACTOR = 10;
-	private Image img = MediaHelper.getImage("bird1.png");
+	private Image img = MediaHelper.getImage("pumba.jpg");
 	private double energyLevel = 1;
 	private double size = 1.0;
 	private static final double VIEW_DISTANCE = 400;
@@ -29,7 +29,7 @@ public class SimBird extends AbstractMovingObject implements IEdibleObject {
 	private double nutrition = 1000.0;
 	private double barValue = 1.0;
 
-	public SimBird(Position pos, Habitat hab) {
+	public SimWarthog(Position pos, Habitat hab) {
 		super(new Direction(0), pos, defaultSpeed);
 		this.habitat = hab;
 
@@ -76,12 +76,12 @@ public class SimBird extends AbstractMovingObject implements IEdibleObject {
 
 	@Override
 	public double getHeight() {
-		return 50;
+		return 100;
 	}
 
 	@Override
 	public double getWidth() {
-		return 50;
+		return 100;
 	}
 
 	@Override
@@ -133,6 +133,7 @@ public class SimBird extends AbstractMovingObject implements IEdibleObject {
 			IEdibleObject obj = getBestFood();
 			if (obj != null) {
 				dir = dir.turnTowards(super.directionTo(obj), 2);
+				accelerateTo(1.5 * defaultSpeed, 0.3);
 				if (this.distanceToTouch(obj) < 5) {
 					double howMuchToEat = 1 - barValue;
 					obj.eat(howMuchToEat);

@@ -2,6 +2,7 @@ package inf101.simulator.objects.examples;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import inf101.simulator.Direction;
 import inf101.simulator.GraphicsHelper;
@@ -16,11 +17,11 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-public class SimBird extends AbstractMovingObject implements IEdibleObject {
+public class SimMareCat extends AbstractMovingObject implements IEdibleObject {
 	private static final double defaultSpeed = 1.0;
 	private static Habitat habitat;
 	private static final double NUTRITION_FACTOR = 10;
-	private Image img = MediaHelper.getImage("bird1.png");
+	private Image img = MediaHelper.getImage("Timon.png");
 	private double energyLevel = 1;
 	private double size = 1.0;
 	private static final double VIEW_DISTANCE = 400;
@@ -29,7 +30,7 @@ public class SimBird extends AbstractMovingObject implements IEdibleObject {
 	private double nutrition = 1000.0;
 	private double barValue = 1.0;
 
-	public SimBird(Position pos, Habitat hab) {
+	public SimMareCat(Position pos, Habitat hab) {
 		super(new Direction(0), pos, defaultSpeed);
 		this.habitat = hab;
 
@@ -128,11 +129,12 @@ public class SimBird extends AbstractMovingObject implements IEdibleObject {
 		nutrition -= 0.3;
 		barValue = nutrition / 1000;
 		int hunger = hungerStatus.hungerStatus(nutrition);
-		
+
 		if (hunger == 0) {
 			IEdibleObject obj = getBestFood();
 			if (obj != null) {
 				dir = dir.turnTowards(super.directionTo(obj), 2);
+				accelerateTo(1.5 * defaultSpeed, 0.3);
 				if (this.distanceToTouch(obj) < 5) {
 					double howMuchToEat = 1 - barValue;
 					obj.eat(howMuchToEat);
@@ -155,6 +157,13 @@ public class SimBird extends AbstractMovingObject implements IEdibleObject {
 					SimEvent event = new SimEvent(this, "CUUUUNT", null, null);
 					habitat.triggerEvent(event);
 
+				}
+			}
+		}
+		for (ISimObject mate : habitat.allObjects()) {
+			if (mate instanceof SimWarthog) {
+				if (distanceTo(mate) < 200) {
+					dir = dir.turnTowards(super.directionTo(mate.getPosition()), 2.3);
 				}
 			}
 		}

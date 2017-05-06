@@ -16,12 +16,14 @@ public class SimInsect extends AbstractMovingObject implements IEdibleObject {
 	private static final double defaultSpeed = 1.0;
 	private static Habitat habitat;
 	private static final double NUTRITION_FACTOR = 10;
+	private static final double DIAMETER = 25;
 	private Image img = MediaHelper.getImage("bug2.jpg");
 	private double energyLevel = 1;
 	private double size = 1.0;
-	public SimInsect(Position pos, Habitat hab) {
+	public SimInsect(Position pos, Habitat hab, double size) {
 		super(new Direction(0), pos, defaultSpeed);
 		this.habitat = hab;
+		this.size = size;
 		
 	}
 	@Override
@@ -36,12 +38,17 @@ public class SimInsect extends AbstractMovingObject implements IEdibleObject {
 	}
 	@Override
 	public double getHeight() {
-		return 50;
+		return DIAMETER * size;
+	}
+
+	@Override
+	public double getNutritionalValue() {
+		return size * NUTRITION_FACTOR;
 	}
 
 	@Override
 	public double getWidth() {
-		return 50;
+		return DIAMETER * size;
 	}
 	@Override
 	public double eat(double howMuch) {
@@ -51,11 +58,7 @@ public class SimInsect extends AbstractMovingObject implements IEdibleObject {
 			destroy();
 		return deltaSize * NUTRITION_FACTOR;
 	}
-	@Override
-	public double getNutritionalValue() {
-		// TODO Auto-generated method stub
-		return 1;
-	}
+
 	
 	@Override
 	public void step() {

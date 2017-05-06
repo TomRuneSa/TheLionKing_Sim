@@ -32,7 +32,7 @@ public class SimAnimal extends AbstractMovingObject implements ISimListener {
 	private static final double VIEW_ANGLE = 45;
 	private double nutrition = 1000.0;
 	private double barValue = 1.0;
-	public static final double NUTRITION_FACTOR = 100;
+	
 
 	private ArrayList<IEdibleObject> food = new ArrayList<>();
 
@@ -110,7 +110,6 @@ public class SimAnimal extends AbstractMovingObject implements ISimListener {
 
 		nutrition -= 0.3;
 //		System.out.println(nutrition);
-		barValue = nutrition / 1000;
 		if (nutrition < 0.1) {
 			 this.destroy();
 		}
@@ -119,14 +118,15 @@ public class SimAnimal extends AbstractMovingObject implements ISimListener {
 		if (obj != null) {
 			dir = dir.turnTowards(super.directionTo(obj), 2);
 			if (this.distanceToTouch(obj) < 5) {
-				double howMuchToEat = 1 - barValue;
+				
+				double howMuchToEat = obj.getNutritionalValue();
 				obj.eat(howMuchToEat);
 				if (barValue < MAX_ENERGY) {
-					nutrition += obj.getNutritionalValue();
+					barValue += howMuchToEat;
 				}
 				SimEvent event = new SimEvent(this, "CUUUUNT", null, null);
 				habitat.triggerEvent(event);
-			
+				barValue += howMuchToEat;
 			}
 		}
 		for (ISimObject rep : habitat.allObjects()) {

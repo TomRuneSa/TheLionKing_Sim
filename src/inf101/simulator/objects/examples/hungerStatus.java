@@ -4,7 +4,7 @@ import inf101.simulator.Habitat;
 import inf101.simulator.Position;
 
 public class hungerStatus {
-	public int hungerStatus(int energy){
+	public static int hungerStatus(double energy){
 		if(energy <= 1000 && energy >= 800){
 			return 1;
 		}

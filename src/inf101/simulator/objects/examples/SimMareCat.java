@@ -22,7 +22,6 @@ public class SimMareCat extends AbstractMovingObject implements IEdibleObject {
 	private static Habitat habitat;
 	private static final double NUTRITION_FACTOR = 10;
 	private Image img = MediaHelper.getImage("Timon.png");
-	private double energyLevel = 1;
 	private double size = 1.0;
 	private static final double VIEW_DISTANCE = 400;
 	private static final double VIEW_ANGLE = 45;
@@ -32,8 +31,7 @@ public class SimMareCat extends AbstractMovingObject implements IEdibleObject {
 
 	public SimMareCat(Position pos, Habitat hab) {
 		super(new Direction(0), pos, defaultSpeed);
-		this.habitat = hab;
-
+		SimMareCat.habitat = hab;
 	}
 
 	@Override
@@ -126,7 +124,7 @@ public class SimMareCat extends AbstractMovingObject implements IEdibleObject {
 	@Override
 	public void step() {
 
-		nutrition -= 0.3;
+//		nutrition -= 0.2;
 		barValue = nutrition / 1000;
 		int hunger = hungerStatus.hungerStatus(nutrition);
 
@@ -134,7 +132,7 @@ public class SimMareCat extends AbstractMovingObject implements IEdibleObject {
 			IEdibleObject obj = getBestFood();
 			if (obj != null) {
 				dir = dir.turnTowards(super.directionTo(obj), 2);
-				accelerateTo(1.5 * defaultSpeed, 0.3);
+				accelerateTo(1.6 * defaultSpeed, 0.3);
 				if (this.distanceToTouch(obj) < 5) {
 					double howMuchToEat = 1 - barValue;
 					obj.eat(howMuchToEat);
@@ -147,25 +145,27 @@ public class SimMareCat extends AbstractMovingObject implements IEdibleObject {
 		if (hunger < 0) {
 			IEdibleObject obj = getClosestFood();
 			if (obj != null) {
-				dir = dir.turnTowards(super.directionTo(obj), 2);
+				dir = dir.turnTowards(super.directionTo(obj), 2.4);
 				if (this.distanceToTouch(obj) < 5) {
 					double howMuchToEat = 1 - barValue;
 					obj.eat(howMuchToEat);
 					if (barValue < 1) {
 						nutrition += obj.getNutritionalValue();
 					}
-					SimEvent event = new SimEvent(this, "CUUUUNT", null, null);
-					habitat.triggerEvent(event);
+//					SimEvent event = new SimEvent(this, "CUUUUNT", null, null);
+//					habitat.triggerEvent(event);
 
 				}
 			}
 		}
+		if(hunger > 0){
 		for (ISimObject mate : habitat.allObjects()) {
 			if (mate instanceof SimWarthog) {
-				if (distanceTo(mate) < 200) {
-					dir = dir.turnTowards(super.directionTo(mate.getPosition()), 2.3);
+				if (distanceTo(mate) < 400) {
+					dir = dir.turnTowards(super.directionTo(mate.getPosition()), 2.1);
 				}
 			}
+		}
 		}
 		// go towards center if we're close to the border
 		if (!habitat.contains(getPosition(), getRadius() * 1.2)) {

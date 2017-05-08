@@ -2,6 +2,7 @@ package inf101.simulator.objects.examples;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import inf101.simulator.Direction;
 import inf101.simulator.GraphicsHelper;
@@ -16,12 +17,11 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-public class SimWarthog extends AbstractMovingObject implements IEdibleObject {
-	private static final double defaultSpeed = 1.0;
+public class SimHyena extends AbstractMovingObject implements IEdibleObject {
+	private static final double defaultSpeed = 1.5;
 	private static Habitat habitat;
 	private static final double NUTRITION_FACTOR = 10;
-	private Image img = MediaHelper.getImage("pumba.jpg");
-	private double energyLevel = 1;
+	private Image img = MediaHelper.getImage("hyena.jpg");
 	private double size = 1.0;
 	private static final double VIEW_DISTANCE = 400;
 	private static final double VIEW_ANGLE = 45;
@@ -29,10 +29,9 @@ public class SimWarthog extends AbstractMovingObject implements IEdibleObject {
 	private double nutrition = 1000.0;
 	private double barValue = 1.0;
 
-	public SimWarthog(Position pos, Habitat hab) {
+	public SimHyena(Position pos, Habitat hab) {
 		super(new Direction(0), pos, defaultSpeed);
 		this.habitat = hab;
-
 	}
 
 	@Override
@@ -52,36 +51,32 @@ public class SimWarthog extends AbstractMovingObject implements IEdibleObject {
 		ISimObject closestObject = null;
 		for (ISimObject obj : habitat.nearbyObjects(this, getRadius() + 400)) {
 
-			if (obj instanceof SimInsect) {
+			if (obj instanceof SimMareCat || obj instanceof SimWarthog) {
 				double tempDist = this.distanceTo(Position.makePos((obj).getX(), obj.getY()));
-
 				double simRepAngle = this.getPosition().directionTo(obj.getPosition()).toAngle();
 				double simAngle = this.getDirection().toAngle();
 				double angle = angleFix(simRepAngle, simAngle);
 
 				if (angle < 45 && angle > -45) {
-
 					if (tempDist < shorttDist) {
 						closestObject = obj;
 						shorttDist = tempDist;
 					}
 				}
-
 				return (IEdibleObject) closestObject;
 			}
 		}
-
 		return null;
 	}
 
 	@Override
 	public double getHeight() {
-		return 100;
+		return 125;
 	}
 
 	@Override
 	public double getWidth() {
-		return 100;
+		return 125;
 	}
 
 	@Override
@@ -95,14 +90,13 @@ public class SimWarthog extends AbstractMovingObject implements IEdibleObject {
 
 	@Override
 	public double getNutritionalValue() {
-		// TODO Auto-generated method stub
-		return 50;
+		return size * NUTRITION_FACTOR;
 	}
 
 	public IEdibleObject getBestFood() {
 		foodBird.clear();
 		for (ISimObject obj : habitat.nearbyObjects(this, getRadius() + 400)) {
-			if (obj instanceof SimInsect) {
+			if (obj instanceof SimMareCat || obj instanceof SimWarthog) {
 
 				double simRepAngle = this.getPosition().directionTo(obj.getPosition()).toAngle();
 				double simAngle = this.getDirection().toAngle();
@@ -125,15 +119,15 @@ public class SimWarthog extends AbstractMovingObject implements IEdibleObject {
 	@Override
 	public void step() {
 
-//		nutrition -= 0.3;
+		nutrition -= 0.2;
 		barValue = nutrition / 1000;
 		int hunger = hungerStatus.hungerStatus(nutrition);
 
 		if (hunger == 0) {
 			IEdibleObject obj = getBestFood();
 			if (obj != null) {
-				dir = dir.turnTowards(super.directionTo(obj), 2);
-				accelerateTo(1.5 * defaultSpeed, 0.3);
+				dir = dir.turnTowards(super.directionTo(obj), 2.4);
+				accelerateTo(1.8 * defaultSpeed, 0.3);
 				if (this.distanceToTouch(obj) < 5) {
 					double howMuchToEat = 1 - barValue;
 					obj.eat(howMuchToEat);
@@ -146,32 +140,32 @@ public class SimWarthog extends AbstractMovingObject implements IEdibleObject {
 		if (hunger < 0) {
 			IEdibleObject obj = getClosestFood();
 			if (obj != null) {
-				dir = dir.turnTowards(super.directionTo(obj), 2);
+				dir = dir.turnTowards(super.directionTo(obj), 2.4);
+				accelerateTo(1.8 * defaultSpeed, 0.3);
 				if (this.distanceToTouch(obj) < 5) {
 					double howMuchToEat = 1 - barValue;
 					obj.eat(howMuchToEat);
 					if (barValue < 1) {
 						nutrition += obj.getNutritionalValue();
 					}
-					SimEvent event = new SimEvent(this, "CUUUUNT", null, null);
-					habitat.triggerEvent(event);
-
+					// SimEvent event = new SimEvent(this, "CUUUUNT", null,
+					// null);
+					// habitat.triggerEvent(event);
 				}
 			}
 		}
 		if (hunger > 0) {
-			for (ISimObject enemy : habitat.nearbyObjects(this, getRadius() + 200)) {
-				double simRepAngle = this.getPosition().directionTo(enemy.getPosition()).toAngle();
-				double simAngle = this.getDirection().toAngle();
-				double angle = angleFix(simRepAngle, simAngle);
-				if (enemy instanceof SimHyena) {
-					if (angle < 45 && angle > -45) {
-						Direction dir1 = directionTo(enemy);
-						Direction dir2 = dir1.turnBack();
-						dir = dir.turnTowards(dir2, 2.2);
-					}
+			for (ISimObject mate : habitat.nearbyObjects(this, getRadius() + 400)) {
+				if (mate instanceof SimHyena) {
+					double simRepAngle = this.getPosition().directionTo(mate.getPosition()).toAngle();
+					double simAngle = this.getDirection().toAngle();
+					double angle = angleFix(simRepAngle, simAngle);
+
+					if (angle < 45 && angle > -45) {			
+						dir = dir.turnTowards(super.directionTo(mate.getPosition()), 2.1);
 				}
 			}
+		}
 		}
 		// go towards center if we're close to the border
 		if (!habitat.contains(getPosition(), getRadius() * 1.2)) {

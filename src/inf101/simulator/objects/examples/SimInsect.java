@@ -34,6 +34,10 @@ public class SimInsect extends AbstractMovingObject implements IEdibleObject {
 		context.drawImage(img, 1.0, 0.0, getWidth(), getHeight());
 		super.drawBar(context, energyLevel, 0, Color.PINK, Color.BLUE);
 	}
+	public double getEnergy(){
+		return energyLevel;
+	}
+	
 	@Override
 	public double getHeight() {
 		return DIAMETER * size;
@@ -61,7 +65,7 @@ public class SimInsect extends AbstractMovingObject implements IEdibleObject {
 	@Override
 	public void step() {
 		if (energyLevel > 0) {
-			energyLevel -= 0.0009;
+			energyLevel -= 0.00039;
 		}
 	//Goes toward center if 
 			dir = dir.turnTowards(directionTo(habitat.getCenter()), 0.5);

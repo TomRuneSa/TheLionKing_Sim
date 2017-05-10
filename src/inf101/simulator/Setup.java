@@ -23,8 +23,8 @@ public class Setup {
 		// 1));
 		habitat.addObject(new SimInsect(new Position(400, 400), habitat, main.getRandom().nextDouble() * 2 + 0.5));
 		habitat.addObject(new SimWarthog(main.randomPos(), habitat));
-		habitat.addObject(new SimMareCat(main.randomPos(), habitat));
-		habitat.addObject(new SimHyena(main.randomPos(), habitat, 2.3));
+		habitat.addObject(new SimMareCat(new Position(1000, 1000), habitat));
+		habitat.addObject(new SimHyena(new Position(250, 250), habitat, 2.3));
 		habitat.addObject(new SimBird(main.randomPos(), habitat));
 		habitat.addObject(new SimMaleLion(main.randomPos(), habitat));
 		habitat.addObject(new SimFemaleLion(main.randomPos(), habitat));
@@ -50,6 +50,8 @@ public class Setup {
 	public static void step(SimMain main, Habitat habitat) {
 		if (main.getRandom().nextInt(400) == 0) {
 			habitat.addObject(new SimTree(main.randomPos(), habitat));
+			habitat.addObject(new SimInsect(main.randomPos(),habitat,
+					main.getRandom().nextDouble() * 1.5 + 0.5));
 		}
 	}
 }

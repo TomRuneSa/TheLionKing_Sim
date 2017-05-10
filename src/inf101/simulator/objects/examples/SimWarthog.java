@@ -115,16 +115,27 @@ public class SimWarthog extends AbstractMovingObject implements IEdibleObject {
 
 	}
 
+	public void SetGetNutrition(double nutrition){
+		if(nutrition>1000||nutrition<0){
+			System.out.println("The nutrition has to be more than 0 and less than 1000");
+			return;
+		}
+		this.nutrition = nutrition;
+	}
+	
+	public double getNutrition() {
+		return nutrition;
+	}
+
 	@Override
 	public void step() {
-
 		nutrition -= 0.2;
 		barValue = nutrition / 1000;
 		int hunger = hungerStatus.hungerStatus(nutrition);
-		
+
 		for (ISimObject danger : habitat.allObjects()) {
-			if (danger instanceof SimHyena) {
-				if (distanceTo(danger) < 200) {
+			if (danger instanceof SimHyena || danger instanceof SimMaleLion || danger instanceof SimFemaleLion) {
+				if (distanceTo(danger) < 300) {
 					Direction dir1 = directionTo(danger);
 					Direction dir2 = dir1.turnBack();
 					dir = dir.turnTowards(dir2, 2.2);
@@ -176,6 +187,7 @@ public class SimWarthog extends AbstractMovingObject implements IEdibleObject {
 				}
 			}
 		}
+		dir = dir.turnTowards(directionTo(habitat.getCenter()), 0.5);
 		// go towards center if we're close to the border
 		if (!habitat.contains(getPosition(), getRadius() * 1.2)) {
 			dir = dir.turnTowards(directionTo(habitat.getCenter()), 5);

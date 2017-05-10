@@ -139,6 +139,7 @@ public class SimMonkey extends AbstractMovingObject implements IEdibleObject {
 				}
 			}
 		}
+		dir = dir.turnTowards(directionTo(habitat.getCenter()), 0.5);
 		// go towards center if we're close to the border
 		if (!habitat.contains(getPosition(), getRadius() * 1.2)) {
 			dir = dir.turnTowards(directionTo(habitat.getCenter()), 5);

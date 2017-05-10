@@ -25,7 +25,6 @@ public class SimAnimal extends AbstractMovingObject implements ISimListener {
 	private static final double defaultSpeed = 1.0;
 	private static Habitat habitat;
 	private Image img = MediaHelper.getImage("pipp.png");
-	private double energyLevel = 1;
 	private static final double MAX_ENERGY = 1.0;
 	private static final double MIN_ENERGY = 0.0;
 	private static final double VIEW_DISTANCE = 400;
@@ -114,7 +113,6 @@ public class SimAnimal extends AbstractMovingObject implements ISimListener {
 	public void step() {
 
 		nutrition -= 0.3;
-//		System.out.println(nutrition);
 		if (nutrition < 0.1) {
 			 this.destroy();
 		}

@@ -112,6 +112,17 @@ public class SimMareCat extends AbstractMovingObject implements IEdibleObject {
 		return (IEdibleObject) foodBird.get(foodBird.size() - 1);
 
 	}
+	public void SetGetNutrition(double nutrition){
+		if(nutrition>1000||nutrition<0){
+			System.out.println("The nutrition has to be more than 0 and less than 1000");
+			return;
+		}
+		this.nutrition = nutrition;
+	}
+	
+	public double getNutrition() {
+		return nutrition;
+	}
 
 	@Override
 	public void step() {
@@ -122,10 +133,11 @@ public class SimMareCat extends AbstractMovingObject implements IEdibleObject {
 
 		for (ISimObject danger : habitat.allObjects()) {
 			if (danger instanceof SimHyena) {
-				if (distanceTo(danger) < 200) {
+				if (distanceTo(danger) < 300) {
 					Direction dir1 = directionTo(danger);
 					Direction dir2 = dir1.turnBack();
 					dir = dir.turnTowards(dir2, 2.2);
+					accelerateTo(1.8 * defaultSpeed, 0.3);
 				}
 			}
 		}
@@ -169,6 +181,7 @@ public class SimMareCat extends AbstractMovingObject implements IEdibleObject {
 			}
 		}
 		}
+		dir = dir.turnTowards(directionTo(habitat.getCenter()), 0.5);
 		// go towards center if we're close to the border
 		if (!habitat.contains(getPosition(), getRadius() * 1.2)) {
 			dir = dir.turnTowards(directionTo(habitat.getCenter()), 5);
@@ -191,5 +204,6 @@ public class SimMareCat extends AbstractMovingObject implements IEdibleObject {
 		return angle;
 
 	}
+	
 
 }

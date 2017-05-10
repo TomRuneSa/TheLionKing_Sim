@@ -88,6 +88,16 @@ public class SimHyena extends AbstractMovingObject implements IEdibleObject {
 	public double getNutritionalValue() {
 		return size * NUTRITION_FACTOR;
 	}
+	public double getNutrition() {
+		return nutrition;
+	}
+	public void SetGetNutrition(double nutrition){
+		if(nutrition>1000||nutrition<0){
+			System.out.println("The nutrition has to be more than 0 and less than 1000");
+			return;
+		}
+		this.nutrition = nutrition;
+	}
 
 	public IEdibleObject getBestFood() {
 		foodHyena.clear();
@@ -112,6 +122,7 @@ public class SimHyena extends AbstractMovingObject implements IEdibleObject {
 
 	}
 
+	
 	@Override
 	public void step() {
 
@@ -121,7 +132,7 @@ public class SimHyena extends AbstractMovingObject implements IEdibleObject {
 		
 		for (ISimObject run : habitat.allObjects()) {
 			if (run instanceof SimMaleLion || run instanceof SimFemaleLion) {
-				if (distanceTo(run) < 200) {
+				if (distanceTo(run) < 500) {
 					Direction dir1 = directionTo(run);
 					Direction dir2 = dir1.turnBack();
 					dir = dir.turnTowards(dir2, 2.2);
@@ -172,6 +183,7 @@ public class SimHyena extends AbstractMovingObject implements IEdibleObject {
 			}
 		}
 		}
+		dir = dir.turnTowards(directionTo(habitat.getCenter()), 0.5);
 		// go towards center if we're close to the border
 		if (!habitat.contains(getPosition(), getRadius() * 1.2)) {
 			dir = dir.turnTowards(directionTo(habitat.getCenter()), 5);

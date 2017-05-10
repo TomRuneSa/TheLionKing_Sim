@@ -79,6 +79,16 @@ public class SimMaleLion extends AbstractMovingObject {
 	public double getWidth() {
 		return 141;
 	}
+	public double getNutrition() {
+		return nutrition;
+	}
+	public void SetGetNutrition(double nutrition){
+		if(nutrition>1000||nutrition<0){
+			System.out.println("The nutrition has to be more than 0 and less than 1000");
+			return;
+		}
+		this.nutrition = nutrition;
+	}
 
 	public IEdibleObject getBestFood() {
 		foodLion.clear();
@@ -170,6 +180,7 @@ public class SimMaleLion extends AbstractMovingObject {
 				}
 			}
 		}
+		dir = dir.turnTowards(directionTo(habitat.getCenter()), 0.5);
 		// go towards center if we're close to the border
 		if (!habitat.contains(getPosition(), getRadius() * 1.2)) {
 			dir = dir.turnTowards(directionTo(habitat.getCenter()), 5);

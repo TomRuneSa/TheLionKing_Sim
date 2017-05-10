@@ -20,11 +20,7 @@ import javafx.scene.paint.Color;
 public class SimFemaleLion extends AbstractMovingObject {
 	private static final double defaultSpeed = 1.5;
 	private static Habitat habitat;
-	private static final double NUTRITION_FACTOR = 10;
 	private Image img = MediaHelper.getImage("sarabi.png");
-	private double size = 1.0;
-	private static final double VIEW_DISTANCE = 400;
-	private static final double VIEW_ANGLE = 45;
 	private ArrayList<IEdibleObject> foodLion = new ArrayList<>();
 	private double nutrition = 1000.0;
 	private double barValue = 1.0;
@@ -114,6 +110,17 @@ public class SimFemaleLion extends AbstractMovingObject {
 
 	}
 
+	public double getNutrition() {
+		return nutrition;
+	}
+	public void SetGetNutrition(double nutrition){
+		if(nutrition>1000||nutrition<0){
+			System.out.println("The nutrition has to be more than 0 and less than 1000");
+			return;
+		}
+		this.nutrition = nutrition;
+	}
+	
 	@Override
 	public void step() {
 		if (born) {
@@ -171,6 +178,7 @@ public class SimFemaleLion extends AbstractMovingObject {
 				}
 			}
 		}
+		dir = dir.turnTowards(directionTo(habitat.getCenter()), 0.5);
 		// go towards center if we're close to the border
 		if (!habitat.contains(getPosition(), getRadius() * 1.2)) {
 			dir = dir.turnTowards(directionTo(habitat.getCenter()), 5);

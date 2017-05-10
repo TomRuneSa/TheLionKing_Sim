@@ -2,10 +2,8 @@ package inf101.simulator.objects.examples;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import inf101.simulator.Direction;
-import inf101.simulator.GraphicsHelper;
 import inf101.simulator.Habitat;
 import inf101.simulator.MediaHelper;
 import inf101.simulator.Position;
@@ -23,8 +21,6 @@ public class SimMareCat extends AbstractMovingObject implements IEdibleObject {
 	private static final double NUTRITION_FACTOR = 10;
 	private Image img = MediaHelper.getImage("Timon.png");
 	private double size = 1.0;
-	private static final double VIEW_DISTANCE = 400;
-	private static final double VIEW_ANGLE = 45;
 	private ArrayList<IEdibleObject> foodBird = new ArrayList<>();
 	private double nutrition = 1000.0;
 	private double barValue = 1.0;
@@ -41,9 +37,6 @@ public class SimMareCat extends AbstractMovingObject implements IEdibleObject {
 		context.scale(1, -1);
 		context.drawImage(img, 1.0, 0.0, getWidth(), getHeight());
 		super.drawBar(context, barValue, 0, Color.RED, Color.BLUE);
-		GraphicsHelper.strokeArcAt(context, getWidth() / 2, getHeight() / 2, VIEW_DISTANCE, 0, VIEW_ANGLE);
-		context.setStroke(Color.YELLOW.deriveColor(0.0, 1.0, 1.0, 0.5));
-		;
 	}
 
 	public IEdibleObject getClosestFood() {
@@ -94,7 +87,6 @@ public class SimMareCat extends AbstractMovingObject implements IEdibleObject {
 
 	@Override
 	public double getNutritionalValue() {
-		// TODO Auto-generated method stub
 		return 50;
 	}
 
@@ -124,10 +116,20 @@ public class SimMareCat extends AbstractMovingObject implements IEdibleObject {
 	@Override
 	public void step() {
 
-//		nutrition -= 0.2;
+		nutrition -= 0.2;
 		barValue = nutrition / 1000;
 		int hunger = hungerStatus.hungerStatus(nutrition);
 
+		for (ISimObject danger : habitat.allObjects()) {
+			if (danger instanceof SimHyena) {
+				if (distanceTo(danger) < 200) {
+					Direction dir1 = directionTo(danger);
+					Direction dir2 = dir1.turnBack();
+					dir = dir.turnTowards(dir2, 2.2);
+				}
+			}
+		}
+		
 		if (hunger == 0) {
 			IEdibleObject obj = getBestFood();
 			if (obj != null) {

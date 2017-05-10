@@ -17,14 +17,11 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 public class SimBird extends AbstractMovingObject implements IEdibleObject {
-	private static final double defaultSpeed = 1.0;
+	private static final double defaultSpeed = 1.5;
 	private static Habitat habitat;
 	private static final double NUTRITION_FACTOR = 10;
 	private Image img = MediaHelper.getImage("bird1.png");
-	private double energyLevel = 1;
 	private double size = 1.0;
-	private static final double VIEW_DISTANCE = 400;
-	private static final double VIEW_ANGLE = 45;
 	private ArrayList<IEdibleObject> foodBird = new ArrayList<>();
 	private double nutrition = 1000.0;
 	private double barValue = 1.0;
@@ -42,9 +39,6 @@ public class SimBird extends AbstractMovingObject implements IEdibleObject {
 		context.scale(1, -1);
 		context.drawImage(img, 1.0, 0.0, getWidth(), getHeight());
 		super.drawBar(context, barValue, 0, Color.RED, Color.BLUE);
-		GraphicsHelper.strokeArcAt(context, getWidth() / 2, getHeight() / 2, VIEW_DISTANCE, 0, VIEW_ANGLE);
-		context.setStroke(Color.YELLOW.deriveColor(0.0, 1.0, 1.0, 0.5));
-		;
 	}
 
 	public IEdibleObject getClosestFood() {
@@ -125,10 +119,10 @@ public class SimBird extends AbstractMovingObject implements IEdibleObject {
 	@Override
 	public void step() {
 
-		nutrition -= 0.3;
+//		nutrition -= 0.3;
 		barValue = nutrition / 1000;
 		int hunger = hungerStatus.hungerStatus(nutrition);
-		
+
 		if (hunger == 0) {
 			IEdibleObject obj = getBestFood();
 			if (obj != null) {
@@ -155,6 +149,13 @@ public class SimBird extends AbstractMovingObject implements IEdibleObject {
 					SimEvent event = new SimEvent(this, "CUUUUNT", null, null);
 					habitat.triggerEvent(event);
 
+				}
+			}
+		}
+		if (hunger > 0) {
+			for (ISimObject mate : habitat.nearbyObjects(this, getRadius() + 230)) {
+				if (mate instanceof SimMaleLion) {
+					dir = dir.turnTowards(super.directionTo(mate.getPosition()), 2.1);
 				}
 			}
 		}

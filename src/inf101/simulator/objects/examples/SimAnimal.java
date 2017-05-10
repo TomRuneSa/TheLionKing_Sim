@@ -62,9 +62,9 @@ public class SimAnimal extends AbstractMovingObject implements ISimListener {
 				double simAngle = this.getDirection().toAngle();
 				double angle = angleFix(simRepAngle, simAngle); 
 				
-				if(angle < 45 && angle > -45)	{
-					food.add((IEdibleObject) obj);
-				}
+//				if(angle < 45 && angle > -45)	{
+//					food.add((IEdibleObject) obj);
+//				}
 			}
 		}
 		if (food.size() == 0) {
@@ -80,12 +80,17 @@ public class SimAnimal extends AbstractMovingObject implements ISimListener {
 		double shorttDist = 401;
 		ISimObject closestObject = null;
 		for (ISimObject obj : habitat.nearbyObjects(this, getRadius() + 400)) {
-
-			if (obj instanceof SimInsect) {
+			if (obj instanceof SimFeed) {
+//				double simRepAngle = this.getPosition().directionTo(obj.getPosition()).toAngle(); 
+//				double simAngle = this.getDirection().toAngle();
+//				double angle = angleFix(simRepAngle, simAngle); 
+//				
+//				if(angle < 45 && angle > -45)	{
 				double tempDist = this.distanceTo(Position.makePos((obj).getX(), obj.getY()));
 				if (tempDist < shorttDist) {
 					closestObject = obj;
 					shorttDist = tempDist;
+//				}
 				}
 
 				return (IEdibleObject) closestObject;
@@ -114,7 +119,7 @@ public class SimAnimal extends AbstractMovingObject implements ISimListener {
 			 this.destroy();
 		}
 
-		IEdibleObject obj = getBestFood();
+		IEdibleObject obj = getClosestFood();
 		if (obj != null) {
 			dir = dir.turnTowards(super.directionTo(obj), 2);
 			if (this.distanceToTouch(obj) < 5) {

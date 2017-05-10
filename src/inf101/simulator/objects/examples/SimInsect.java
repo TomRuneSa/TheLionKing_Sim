@@ -33,8 +33,6 @@ public class SimInsect extends AbstractMovingObject implements IEdibleObject {
 		context.scale(1, -1);
 		context.drawImage(img, 1.0, 0.0, getWidth(), getHeight());
 		super.drawBar(context, energyLevel, 0, Color.PINK, Color.BLUE);
-//		GraphicsHelper.strokeArcAt(context, getWidth() / 2, getHeight() / 2, VIEW_DISTANCE, 0, VIEW_ANGLE);
-		context.setStroke(Color.YELLOW.deriveColor(0.0, 1.0, 1.0, 0.5));
 	}
 	@Override
 	public double getHeight() {

@@ -357,7 +357,7 @@ public class Habitat {
 		// ducks.get(i).step();
 
 		hoveredObject = null;
-		for (ISimObject obj : objects) {
+		for (ISimObject obj : new ArrayList<>(objects)) {
 			if (obj.exists()) {
 				obj.step();
 			}

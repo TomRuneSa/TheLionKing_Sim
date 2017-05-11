@@ -36,10 +36,10 @@ Rules of the program:
 		- The insects does nothing but being eaten. The insect just walks around with no meaning and doesn't try to 		avoid anything. 
 		
 - Bird
-		- The bird looks for the male lion, so that he can follow it for protection from the hyenas. But once the bird gets hungry, it strays away from the lion and looks for food. The bird can only be eaten by the hyena, which is why it fears the hyena. 
+		- The bird looks for the male lionBut once the bird gets hungry, it strays away from the lion and looks for 		food. 
 		
 - Hyena
-		- The hyena is the most dangerous animal after the lions. It can eat anything. But it doesn't eat insect, 		because it doesn't like them, and it doesn't eat the lion cub, in fear of the male lion. If the hyena isn't 		hungry, it will look for other hyenas, because they have to stick together to survive longer. If there are 		more than 3 hyenas in close circuit the nutrition will decrease slower.
+		- The hyena is the most dangerous animal after the lions. It can eat anything. But it doesn't eat insect, 		because it doesn't like them, and it doesn't eat the lion cub, in fear of the male lion. If the hyena isn't 		hungry, it will look for other hyenas, because hyenas are stronger in a pack. If a hyena is starving, it'll get 		desperate enough to go after a lion, if the pack has 3 or more members.
 		
 - Bananatree
 		- The bananatree will grow a certain amount each step, and when it's big enough, it will give a banana.
@@ -47,7 +47,37 @@ Rules of the program:
 - Banana
 		- The banana exists when the bananatree is fully grown. The monkey eats the bananas.
 
+## Beskrivelse av systemet  
 
+###Common methods:
+- getClosestFood(): 
+	-Creates an object that goes through the habitat in a circuit of radius + 400. If the objects hits an object that is 	edible for the animal, it will check if it's within field of vision. As long as it is, it will check if it's the 	closest object that has been found so far. If it is, that's the IDibleObject that will be returned.
+
+- getBestFood(): 
+	-Creates an object that goes through the habitat in a circuit of radius + 400. If the objects hits an object that is 	edible for the animal, it will check if it's within field of vision. If it is, the object will be added to an 	arrayList that has been created for this. This list will always be cleared every time this method is called. If 	there 	are no objects in the list, null will be returned. A new compare is then created. The list is then sorted 	with the 	help of the compare that was just created. The list is sorted from smallest to biggest, so the 	EdibleObject that is 	returned is the last object in the list.
+	
+- setGetNutrition()
+	- A method that allows other classes to change the nutrition value of this object. It takes in a value, and sets the 	nutrition value of the object to the value it gets as input. I made this method so that it'll be 	easier for 	testing.
+
+- GetNutrition()
+	- A method that allows other classes to see the nutrition of another object. I made this method so that it'll be 	easier for testing.
+	
+- Class: HungerStatus
+	- A class that I created so that I could find out how hungry any animal was at any given time. It takes in the 	nutrition value of the animal, returns 1 for full, 0 for hungry, and -1 for starving. This way it's easier to decide 	how an animal should behave based on how hungry it is.
+
+###Step-methods:
+
+*Every step() method will be described in short here. For more details please see the step() method of the object you wish to look at.*
+
+-SimMaleLion
+	-If the lion is full, it will just walk around aimlessly. Unless its horny, then it will search for a female to 	impregnate. As long as there hasn't been born a cub, it will get "hornier" each step. If it gets to horny without 	impregnating a female, it will blow of steam and the bar will clear. 
+	If the lion is moderately hungry, it will search for warthogs, marecats and hyenas to eat. It will go for the best 	food it can see. If the lion is starving, it will search for the same animals to eat, but instead of going for the 	best one, it will go for the closest one so it'll get food as fast as possible.
+
+-SimFemaleLion
+	- If the lion is full, it will just walk around aimlessly. Unless it gets impregnated, then it will give birth to a 	cub. This will only happen once.
+	If the lion is moderately hungry, it will search for warthogs, marecats and hyenas to eat. It will go for the best 	food it can see. If the lion is starving, it will search for the same animals to eat, but instead of going for the 	best one, it will go for the closest one so it'll get food as fast as possible.
+-Cub
+	-
 
 ## Svar på spørsmål
 1. The Position.move() takes in a direction in which the object should move, and a distance of which the object should move. If the distance is equals to zero, which means that there isn't any longer to move the object, it returns the position it's in before it was asked to move "0 distance". If not it moves the object in the direction that's asked, and returns the new position, by making a new position using the Position.makePos() method. 
@@ -59,7 +89,9 @@ It's different from the Position class in lab5 because in lba5 it uses private d
 
 4. directionTo calculates a direction towards another position. distanceTo calculates the distance to another position. 
 
-5. I would say that it would be smart to make the speed-variable private, because otherwise other methods and class can change it's value, even though it's originally set as protected. It can still be changed even though it's "protected". 
+5. I would say that it would be smart to make the speed-variable private, because otherwise other methods and class can change it's value, even though it's originally set as protected. It can still be changed even though it's "protected".
+
+6.  
 
 
 ## Kilder til media

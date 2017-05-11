@@ -3,6 +3,7 @@ package inf101.simulator.objects.examples;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import inf101.simulator.Direction;
 import inf101.simulator.GraphicsHelper;
@@ -13,24 +14,41 @@ import inf101.simulator.objects.AbstractMovingObject;
 import inf101.simulator.objects.IEdibleObject;
 import inf101.simulator.objects.ISimObject;
 import inf101.simulator.objects.SimEvent;
+import inf101.util.generators.DirectionGenerator;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-public class SimMaleLion extends AbstractMovingObject {
+public class SimMaleLion extends AbstractMovingObject implements IEdibleObject {
 	private static final double defaultSpeed = 1.5;
 	private static Habitat habitat;
 	private Image img = MediaHelper.getImage("mufasa.png");
 	private ArrayList<IEdibleObject> foodLion = new ArrayList<>();
+	private static final double DIAMETER = 40;
+	private static final double NUTRITION_FACTOR = 100;
+	private double size = 1.0;
 	private double nutrition = 1000.0;
 	private double barValue = 1.0;
 	private double hBar = 0.91;
 	private boolean impregnate = false;
 	private boolean done = false;
+	private int steps = 0;
+	private static DirectionGenerator dirGen = new DirectionGenerator();
 
 	public SimMaleLion(Position pos, Habitat hab) {
 		super(new Direction(0), pos, defaultSpeed);
 		this.habitat = hab;
+	}
+	
+	public void SetGethBar(double value){
+		if(value>100 || value<0){
+			System.out.println("The value has to be between 0 and 100");
+			return;
+		}
+		this.hBar = value;
+	}
+	public double getHBar() {
+		return hBar;
 	}
 
 	@Override
@@ -79,15 +97,17 @@ public class SimMaleLion extends AbstractMovingObject {
 	public double getWidth() {
 		return 141;
 	}
-	public double getNutrition() {
-		return nutrition;
-	}
+	
 	public void SetGetNutrition(double nutrition){
 		if(nutrition>1000||nutrition<0){
 			System.out.println("The nutrition has to be more than 0 and less than 1000");
 			return;
 		}
 		this.nutrition = nutrition;
+	}
+	
+	public double getNutrition() {
+		return nutrition;
 	}
 
 	public IEdibleObject getBestFood() {
@@ -123,6 +143,7 @@ public class SimMaleLion extends AbstractMovingObject {
 				hBar = 0;
 			}
 		}
+		steps++;
 		nutrition -= 0.1;
 		barValue = nutrition / 1000;
 		int hunger = hungerStatus.hungerStatus(nutrition);
@@ -152,7 +173,7 @@ public class SimMaleLion extends AbstractMovingObject {
 					if (barValue < 1) {
 						nutrition += obj.getNutritionalValue();
 					}
-					// SimEvent event = new SimEvent(this, "CUUUUNT", null,
+					// SimEvent event = new SimEvent(this, "Yum", null,
 					// null);
 					// habitat.triggerEvent(event);
 				}
@@ -180,7 +201,12 @@ public class SimMaleLion extends AbstractMovingObject {
 				}
 			}
 		}
-		dir = dir.turnTowards(directionTo(habitat.getCenter()), 0.5);
+		if(steps == 200){
+			Random i = new Random();
+			Direction dr = dirGen.generate(i);
+			dir= dir.turnTowards(dr, 15);
+			steps = 0;
+		}
 		// go towards center if we're close to the border
 		if (!habitat.contains(getPosition(), getRadius() * 1.2)) {
 			dir = dir.turnTowards(directionTo(habitat.getCenter()), 5);
@@ -202,6 +228,22 @@ public class SimMaleLion extends AbstractMovingObject {
 		double angle = ((((a - b) % 360) + 540) % 360) - 180; // stackoverflow
 		return angle;
 
+	}
+
+	@Override
+	public double eat(double howMuch) {
+		double deltaSize = Math.min(size, howMuch / NUTRITION_FACTOR);
+		size -= deltaSize;
+		nutrition -= howMuch*NUTRITION_FACTOR;
+		if (size == 0)
+			destroy();
+		return deltaSize * NUTRITION_FACTOR;
+	}
+	
+
+	@Override
+	public double getNutritionalValue() {
+		return size * NUTRITION_FACTOR;
 	}
 
 }

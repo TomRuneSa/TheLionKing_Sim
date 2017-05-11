@@ -3,6 +3,7 @@ package inf101.simulator.objects.examples;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import inf101.simulator.Direction;
 import inf101.simulator.GraphicsHelper;
@@ -13,6 +14,7 @@ import inf101.simulator.objects.AbstractMovingObject;
 import inf101.simulator.objects.IEdibleObject;
 import inf101.simulator.objects.ISimObject;
 import inf101.simulator.objects.SimEvent;
+import inf101.util.generators.DirectionGenerator;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -26,6 +28,8 @@ public class SimFemaleLion extends AbstractMovingObject {
 	private double barValue = 1.0;
 	private double hBar = 0.90;
 	private boolean born = false;
+	private int steps = 0;
+	private static DirectionGenerator dirGen = new DirectionGenerator();
 
 	public SimFemaleLion(Position pos, Habitat hab) {
 		super(new Direction(0), pos, defaultSpeed);
@@ -82,7 +86,13 @@ public class SimFemaleLion extends AbstractMovingObject {
 	public double getWidth() {
 		return 141;
 	}
-
+	public void SetGethBar(double value){
+		if(value>100 || value<0){
+			System.out.println("The value has to be between 0 and 100");
+			return;
+		}
+		this.hBar = value;
+	}
 	public double getHBar() {
 		return hBar;
 	}
@@ -131,6 +141,7 @@ public class SimFemaleLion extends AbstractMovingObject {
 				hBar = 0;
 			}
 		}
+		steps++;
 		nutrition -= 0.1;
 		barValue = nutrition / 1000;
 		int hunger = hungerStatus.hungerStatus(nutrition);
@@ -160,7 +171,7 @@ public class SimFemaleLion extends AbstractMovingObject {
 					if (barValue < 1) {
 						nutrition += obj.getNutritionalValue();
 					}
-					// SimEvent event = new SimEvent(this, "CUUUUNT", null,
+					// SimEvent event = new SimEvent(this, "Nam", null,
 					// null);
 					// habitat.triggerEvent(event);
 				}
@@ -178,7 +189,12 @@ public class SimFemaleLion extends AbstractMovingObject {
 				}
 			}
 		}
-		dir = dir.turnTowards(directionTo(habitat.getCenter()), 0.5);
+		if(steps == 200){
+			Random i = new Random();
+			Direction dr = dirGen.generate(i);
+			dir= dir.turnTowards(dr, 15);
+			steps = 0;
+		}
 		// go towards center if we're close to the border
 		if (!habitat.contains(getPosition(), getRadius() * 1.2)) {
 			dir = dir.turnTowards(directionTo(habitat.getCenter()), 5);

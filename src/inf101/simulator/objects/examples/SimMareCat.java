@@ -2,6 +2,7 @@ package inf101.simulator.objects.examples;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 
 import inf101.simulator.Direction;
 import inf101.simulator.Habitat;
@@ -11,6 +12,7 @@ import inf101.simulator.objects.AbstractMovingObject;
 import inf101.simulator.objects.IEdibleObject;
 import inf101.simulator.objects.ISimObject;
 import inf101.simulator.objects.SimEvent;
+import inf101.util.generators.DirectionGenerator;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -24,7 +26,9 @@ public class SimMareCat extends AbstractMovingObject implements IEdibleObject {
 	private ArrayList<IEdibleObject> foodBird = new ArrayList<>();
 	private double nutrition = 1000.0;
 	private double barValue = 1.0;
-
+	private int steps = 0;
+	private static DirectionGenerator dirGen = new DirectionGenerator();
+	
 	public SimMareCat(Position pos, Habitat hab) {
 		super(new Direction(0), pos, defaultSpeed);
 		SimMareCat.habitat = hab;
@@ -126,7 +130,10 @@ public class SimMareCat extends AbstractMovingObject implements IEdibleObject {
 
 	@Override
 	public void step() {
-
+		
+		boolean follow = false;
+		
+		steps++;
 		nutrition -= 0.2;
 		barValue = nutrition / 1000;
 		int hunger = hungerStatus.hungerStatus(nutrition);
@@ -166,7 +173,7 @@ public class SimMareCat extends AbstractMovingObject implements IEdibleObject {
 					if (barValue < 1) {
 						nutrition += obj.getNutritionalValue();
 					}
-//					SimEvent event = new SimEvent(this, "CUUUUNT", null, null);
+//					SimEvent event = new SimEvent(this, "iii", null, null);
 //					habitat.triggerEvent(event);
 
 				}
@@ -176,12 +183,18 @@ public class SimMareCat extends AbstractMovingObject implements IEdibleObject {
 		for (ISimObject mate : habitat.allObjects()) {
 			if (mate instanceof SimWarthog) {
 				if (distanceTo(mate) < 400) {
+					follow = true;
 					dir = dir.turnTowards(super.directionTo(mate.getPosition()), 2.1);
 				}
 			}
 		}
 		}
-		dir = dir.turnTowards(directionTo(habitat.getCenter()), 0.5);
+		if(steps == 200 && !follow){
+			Random i = new Random();
+			Direction dr = dirGen.generate(i);
+			dir= dir.turnTowards(dr, 15);
+			steps = 0;
+		}
 		// go towards center if we're close to the border
 		if (!habitat.contains(getPosition(), getRadius() * 1.2)) {
 			dir = dir.turnTowards(directionTo(habitat.getCenter()), 5);

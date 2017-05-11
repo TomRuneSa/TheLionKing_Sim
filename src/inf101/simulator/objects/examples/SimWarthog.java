@@ -2,6 +2,7 @@ package inf101.simulator.objects.examples;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 
 import inf101.simulator.Direction;
 import inf101.simulator.GraphicsHelper;
@@ -12,6 +13,7 @@ import inf101.simulator.objects.AbstractMovingObject;
 import inf101.simulator.objects.IEdibleObject;
 import inf101.simulator.objects.ISimObject;
 import inf101.simulator.objects.SimEvent;
+import inf101.util.generators.DirectionGenerator;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -25,6 +27,8 @@ public class SimWarthog extends AbstractMovingObject implements IEdibleObject {
 	private ArrayList<IEdibleObject> insects = new ArrayList<>();
 	private double nutrition = 1000.0;
 	private double barValue = 1.0;
+	private int steps = 0;
+	private static DirectionGenerator dirGen = new DirectionGenerator();
 
 	public SimWarthog(Position pos, Habitat hab) {
 		super(new Direction(0), pos, defaultSpeed);
@@ -129,6 +133,7 @@ public class SimWarthog extends AbstractMovingObject implements IEdibleObject {
 
 	@Override
 	public void step() {
+		steps++;
 		nutrition -= 0.2;
 		barValue = nutrition / 1000;
 		int hunger = hungerStatus.hungerStatus(nutrition);
@@ -187,7 +192,12 @@ public class SimWarthog extends AbstractMovingObject implements IEdibleObject {
 				}
 			}
 		}
-		dir = dir.turnTowards(directionTo(habitat.getCenter()), 0.5);
+		if(steps == 250){
+			Random i = new Random();
+			Direction dr = dirGen.generate(i);
+			dir= dir.turnTowards(dr, 15);
+			steps = 0;
+		}
 		// go towards center if we're close to the border
 		if (!habitat.contains(getPosition(), getRadius() * 1.2)) {
 			dir = dir.turnTowards(directionTo(habitat.getCenter()), 5);

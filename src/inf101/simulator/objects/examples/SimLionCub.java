@@ -12,6 +12,7 @@ import inf101.simulator.objects.AbstractMovingObject;
 import inf101.simulator.objects.IEdibleObject;
 import inf101.simulator.objects.ISimObject;
 import inf101.simulator.objects.SimEvent;
+import inf101.util.generators.DirectionGenerator;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -23,6 +24,8 @@ public class SimLionCub extends AbstractMovingObject {
 	private ArrayList<IEdibleObject> foodLionCub = new ArrayList<>();
 	private double nutrition = 1000.0;
 	private double barValue = 1.0;
+	private int steps = 0;
+	private static DirectionGenerator dirGen = new DirectionGenerator();
 
 	public SimLionCub(Position pos, Habitat hab) {
 		super(new Direction(0), pos, defaultSpeed);
@@ -96,7 +99,8 @@ public class SimLionCub extends AbstractMovingObject {
 
 	@Override 
 	public void step() {
-
+		
+		boolean follow = false;
 		nutrition -= 0.2;
 		barValue = nutrition / 1000;
 		int hunger = hungerStatus.hungerStatus(nutrition);		
@@ -149,11 +153,18 @@ public class SimLionCub extends AbstractMovingObject {
 					double simAngle = this.getDirection().toAngle();
 					double angle = angleFix(simRepAngle, simAngle);
 
-					if (angle < 45 && angle > -45) {			
+					if (angle < 45 && angle > -45) {
+						follow = true;
 						dir = dir.turnTowards(super.directionTo(father.getPosition()), 2.1);
 				}
 			}
 		}
+		}
+		if(steps == 200 && !follow){
+			Random i = new Random();
+			Direction dr = dirGen.generate(i);
+			dir= dir.turnTowards(dr, 15);
+			steps = 0;
 		}
 		// go towards center if we're close to the border
 		if (!habitat.contains(getPosition(), getRadius() * 1.2)) {

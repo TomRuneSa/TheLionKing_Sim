@@ -2,6 +2,7 @@ package inf101.simulator.objects.examples;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 
 import inf101.simulator.Direction;
 import inf101.simulator.Habitat;
@@ -9,27 +10,34 @@ import inf101.simulator.MediaHelper;
 import inf101.simulator.Position;
 import inf101.simulator.objects.AbstractMovingObject;
 import inf101.simulator.objects.IEdibleObject;
+import inf101.simulator.objects.ISimListener;
 import inf101.simulator.objects.ISimObject;
 import inf101.simulator.objects.SimEvent;
+import inf101.util.generators.DirectionGenerator;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-public class SimHyena extends AbstractMovingObject implements IEdibleObject {
+public class SimHyena extends AbstractMovingObject implements IEdibleObject, ISimListener {
 	private static final double defaultSpeed = 1.5;
 	private static Habitat habitat;
 	private static final double DIAMETER = 40;
 	private static final double NUTRITION_FACTOR = 100;
-	private Image img = MediaHelper.getImage("hyena.jpg");
 	private double size = 1.0;
+	private Image img = MediaHelper.getImage("hyena.jpg");
 	private ArrayList<IEdibleObject> foodHyena = new ArrayList<>();
 	private double nutrition = 1000.0;
 	private double barValue = 1.0;
-
+	private int packSize = 1;
+	private int steps = 0;
+		
+	private static DirectionGenerator dirGen = new DirectionGenerator();
+//-90< super.getDirection().toAngle
 	public SimHyena(Position pos, Habitat hab, double size) {
 		super(new Direction(0), pos, defaultSpeed);
 		this.habitat = hab;
 		this.size = size;
+		this.habitat.addListener(this, this);
 	}
 
 	@Override
@@ -73,6 +81,15 @@ public class SimHyena extends AbstractMovingObject implements IEdibleObject {
 	public double getWidth() {
 		return DIAMETER * size;
 	}
+	public int GetPackSize(){
+		packSize = 1;
+		for (ISimObject mate : habitat.nearbyObjects(this, getRadius() + 400)) {
+			if (mate instanceof SimHyena) {
+				packSize++;	
+			}
+		}
+		return packSize;
+	}
 
 	@Override
 	public double eat(double howMuch) {
@@ -83,6 +100,7 @@ public class SimHyena extends AbstractMovingObject implements IEdibleObject {
 			destroy();
 		return deltaSize * NUTRITION_FACTOR;
 	}
+	
 
 	@Override
 	public double getNutritionalValue() {
@@ -99,6 +117,7 @@ public class SimHyena extends AbstractMovingObject implements IEdibleObject {
 		this.nutrition = nutrition;
 	}
 
+	
 	public IEdibleObject getBestFood() {
 		foodHyena.clear();
 		for (ISimObject obj : habitat.nearbyObjects(this, getRadius() + 400)) {
@@ -121,15 +140,41 @@ public class SimHyena extends AbstractMovingObject implements IEdibleObject {
 		return (IEdibleObject) foodHyena.get(foodHyena.size() - 1);
 
 	}
+	
+	public IEdibleObject getLions(){
+		double shorttDist = 401;
+		ISimObject closestObject = null;
+		for (ISimObject food : habitat.nearbyObjects(this, getRadius() + 400)) {
+
+			if (food instanceof SimMaleLion || food instanceof SimFemaleLion) {
+				double tempDist = this.distanceTo(Position.makePos((food).getX(), food.getY()));
+				double simRepAngle = this.getPosition().directionTo(food.getPosition()).toAngle();
+				double simAngle = this.getDirection().toAngle();
+				double angle = angleFix(simRepAngle, simAngle);
+
+				if (angle < 45 && angle > -45) {
+					if (tempDist < shorttDist) {
+						closestObject = food;
+						shorttDist = tempDist;
+					}
+				}
+				return (IEdibleObject) closestObject;
+			}
+		}
+		return null;
+	}
+	
+	
 
 	
 	@Override
 	public void step() {
-
+		steps++;
+		int pack = GetPackSize();
 		nutrition -= 0.2;
 		barValue = nutrition / 1000;
 		int hunger = hungerStatus.hungerStatus(nutrition);
-		
+		if(pack<3){
 		for (ISimObject run : habitat.allObjects()) {
 			if (run instanceof SimMaleLion || run instanceof SimFemaleLion) {
 				if (distanceTo(run) < 500) {
@@ -138,6 +183,7 @@ public class SimHyena extends AbstractMovingObject implements IEdibleObject {
 					dir = dir.turnTowards(dir2, 2.2);
 				}
 			}
+		}
 		}
 		if (hunger == 0) {
 			IEdibleObject obj = getBestFood();
@@ -164,9 +210,9 @@ public class SimHyena extends AbstractMovingObject implements IEdibleObject {
 					if (barValue < 1) {
 						nutrition += obj.getNutritionalValue();
 					}
-					// SimEvent event = new SimEvent(this, "CUUUUNT", null,
-					// null);
-					// habitat.triggerEvent(event);
+					 SimEvent event = new SimEvent(this, "Nam", this, this.getPosition());
+					 habitat.triggerEvent(event);
+					 
 				}
 			}
 		}
@@ -183,7 +229,35 @@ public class SimHyena extends AbstractMovingObject implements IEdibleObject {
 			}
 		}
 		}
-		dir = dir.turnTowards(directionTo(habitat.getCenter()), 0.5);
+		if(hunger < 0 && pack>=3){
+			 
+			IEdibleObject obj = getLions();
+			if (obj != null) {
+				
+				SimEvent event = new SimEvent(this, "Nam", this, obj.getPosition());
+				 habitat.triggerEvent(event);
+				 
+				dir = dir.turnTowards(super.directionTo(obj), 2.4);
+				accelerateTo(1.8 * defaultSpeed, 0.3);
+				if (this.distanceToTouch(obj) < 5) {
+					double howMuchToEat = 1 - barValue;
+					obj.eat(howMuchToEat);
+					if (barValue < 1) {
+						nutrition += obj.getNutritionalValue();
+					}
+					 
+					 
+				}
+			}
+		}
+		if(steps == 200){
+		Random i = new Random();
+		Direction dr = dirGen.generate(i);
+		dir= dir.turnTowards(dr, 15);
+		steps = 0;
+		}
+		
+		
 		// go towards center if we're close to the border
 		if (!habitat.contains(getPosition(), getRadius() * 1.2)) {
 			dir = dir.turnTowards(directionTo(habitat.getCenter()), 5);
@@ -205,6 +279,14 @@ public class SimHyena extends AbstractMovingObject implements IEdibleObject {
 		double angle = ((((a - b) % 360) + 540) % 360) - 180; // stackoverflow
 		return angle;
 
+	}
+
+	@Override
+	public void eventHappened(SimEvent event) {
+		if(event.getType().equals("Nam")){
+			dir = dir.turnTowards(directionTo((Position)event.getData()), 2.5);
+		}
+		
 	}
 
 }

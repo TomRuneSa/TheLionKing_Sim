@@ -33,21 +33,21 @@ public class SimMaleLionTest {
 	public void willEatTest() {
 		Habitat hab = new Habitat(main, 500, 500);
 		SimMaleLion sim1 = new SimMaleLion(new Position(230, 250), hab);
-		SimMareCat feed1 = new SimMareCat(new Position(350, 250), hab);
-		SimWarthog feed2 = new SimWarthog(new Position(450, 250), hab);
+		SimMareCat feed1 = new SimMareCat(new Position(250, 250), hab);
+		SimWarthog feed2 = new SimWarthog(new Position(270, 250), hab);
 
 		hab.addObject(sim1);
 		hab.addObject(feed1);
 		hab.addObject(feed2);
 
 		for (int i = 0; i < 500; i++) {
-			sim1.SetGetNutrition(500);
+			sim1.SetGetNutrition(299);
 			feed1.SetGetNutrition(1000);
 			feed2.SetGetNutrition(1000);
 			hab.step();
 		}
 
-		assertFalse("Food should be gone", feed1.exists());
+		assertFalse("Food1 should be gone", feed1.exists());
 		assertFalse("Food should be gone", feed2.exists());
 	}
 
@@ -74,10 +74,7 @@ public class SimMaleLionTest {
 		}
 	}
 
-	/**
-	 * Test scenario: Places marecat in a habitat, and sets its nutrition to
-	 * 100. The marecat should die within 600 steps.
-	 */
+
 	@Test
 	public void willDieTest() {
 		Habitat hab = new Habitat(main, 500, 500);
@@ -91,8 +88,8 @@ public class SimMaleLionTest {
 	}
 
 	/**
-	 * Test scenario: Places marecat and a warthog in a habitat, and sets their
-	 * position. After 500 steps the marecat should be facing the warthog.
+	 * Test scenario: Places male and female in a habitat, and sets their
+	 * position. After xxx steps the male should be facing the female.
 	 */
 	@Test
 	public void willFollowTest() {
@@ -104,14 +101,17 @@ public class SimMaleLionTest {
 
 		for (int i = 0; i < 500; i++) {
 			sim1.SetGetNutrition(1000);
-			sim2.SetGetNutrition(200);
-			sim1.SetGethBar(95);
-			sim2.SetGethBar(95);
+			sim2.SetGetNutrition(1000);
+			sim1.SetGethBar(0.95);
+			sim2.SetGethBar(0.95);
 
 			hab.step();
 		}
-		assertTrue(Math.abs(
-				sim1.getPosition().directionTo(sim2.getPosition()).toAngle() - sim1.getDirection().toAngle()) < 45);
+		double ang = Math.abs(
+				sim1.getPosition().directionTo(sim2.getPosition()).toAngle() - sim1.getDirection().toAngle());
+		assertTrue(ang<45 || ang >(360-45));
+//		assertTrue(Math.abs(
+//				sim1.getPosition().directionTo(sim2.getPosition()).toAngle() - sim1.getDirection().toAngle()) < 45);
 	}
 
 	/**
@@ -126,16 +126,13 @@ public class SimMaleLionTest {
 		hab.addObject(Lion1);
 		hab.addObject(Lion2);
 
-		for (int i = 0; i < 200000; i++) {
+		for (int i = 0; i < 2000; i++) {
 			Lion1.SetGetNutrition(1000);
 			Lion2.SetGetNutrition(1000);
-			Lion1.SetGethBar(90);
-			Lion2.SetGethBar(90);
+			Lion1.SetGethBar(0.90);
+			Lion2.SetGethBar(0.90);
 			hab.step();	
 		}
-		System.out.println(Lion1.getPregnant());
-		if(!Lion1.getPregnant()){
-			fail("Should be pregnant");
-		}
+		assertTrue( "Should be pregnant" ,Lion1.getPregnant());
 	}
 }

@@ -35,6 +35,7 @@ public class SimWarthogTest {
 		hab.addObject(feed1);
 
 		for (int i = 0; i < 2500; i++) {
+			sim1.SetGetNutrition(500);
 			hab.step();
 		}
 
@@ -81,7 +82,7 @@ public class SimWarthogTest {
 	}
 	
 	/**
-	 * Test scenario: check that marecat avoid hyenas
+	 * Test scenario: check that Warthog avoid hyenas
 	 */
 	@Test
 	public void avoidHyenas() {
@@ -91,7 +92,7 @@ public class SimWarthogTest {
 		hab.addObject(sim1);
 		hab.addObject(hyena);
 
-		for (int i = 0; i < 12000; i++) {
+		for (int i = 0; i < 6000; i++) {
 			hyena.SetGetNutrition(1000);
 			sim1.SetGetNutrition(1000);
 			hab.step();

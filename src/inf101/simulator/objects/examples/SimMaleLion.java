@@ -29,7 +29,7 @@ public class SimMaleLion extends AbstractMovingObject implements IEdibleObject {
 	private double size = 1.0;
 	private double nutrition = 1000.0;
 	private double barValue = 1.0;
-	private double hBar = 0.91;
+	private double hBar = 0.0;
 	private boolean impregnate = false;
 	private boolean done = false;
 	private int steps = 0;
@@ -39,14 +39,15 @@ public class SimMaleLion extends AbstractMovingObject implements IEdibleObject {
 		super(new Direction(0), pos, defaultSpeed);
 		this.habitat = hab;
 	}
-	
-	public void SetGethBar(double value){
-		if(value>100 || value<0){
-			System.out.println("The value has to be between 0 and 100");
+
+	public void SetGethBar(double value) {
+		if (value > 1 || value < 0) {
+			System.out.println("The value has to be between 0 and 1");
 			return;
 		}
 		this.hBar = value;
 	}
+
 	public double getHBar() {
 		return hBar;
 	}
@@ -97,15 +98,15 @@ public class SimMaleLion extends AbstractMovingObject implements IEdibleObject {
 	public double getWidth() {
 		return 141;
 	}
-	
-	public void SetGetNutrition(double nutrition){
-		if(nutrition>1000||nutrition<0){
+
+	public void SetGetNutrition(double nutrition) {
+		if (nutrition > 1000 || nutrition < 0) {
 			System.out.println("The nutrition has to be more than 0 and less than 1000");
 			return;
 		}
 		this.nutrition = nutrition;
 	}
-	
+
 	public double getNutrition() {
 		return nutrition;
 	}
@@ -173,38 +174,37 @@ public class SimMaleLion extends AbstractMovingObject implements IEdibleObject {
 					if (barValue < 1) {
 						nutrition += obj.getNutritionalValue();
 					}
-					// SimEvent event = new SimEvent(this, "Yum", null,
-					// null);
-					// habitat.triggerEvent(event);
 				}
 			}
 		}
+		System.out.println(hunger);
+		System.out.println(hBar);
 		if (hunger > 0 && (hBar > 0.85 && hBar < 1.00)) {
 			for (ISimObject mate : habitat.nearbyObjects(this, getRadius() + 400)) {
 				if (mate instanceof SimFemaleLion) {
 					double simRepAngle = this.getPosition().directionTo(mate.getPosition()).toAngle();
 					double simAngle = this.getDirection().toAngle();
 					double angle = angleFix(simRepAngle, simAngle);
-
+					System.out.println(((SimFemaleLion) mate).getHBar());
 					if (((SimFemaleLion) mate).getHBar() > 0.85 && ((SimFemaleLion) mate).getHBar() < 1.00) {
-					if (angle < 45 && angle > -45) {
-						dir = dir.turnTowards(super.directionTo(mate.getPosition()), 2.5);
-						if(this.distanceToTouch(mate) < 5){
-							impregnate = true;
-							if(((SimFemaleLion) mate).getBorn()){
-								done = true;
-								
+						if (angle < 45 && angle > -45) {
+							dir = dir.turnTowards(super.directionTo(mate.getPosition()), 2.5);
+							if (this.distanceToTouch(mate) < 5) {
+								impregnate = true;
+								if (((SimFemaleLion) mate).getBorn()) {
+									done = true;
+
+								}
 							}
 						}
-					}
 					}
 				}
 			}
 		}
-		if(steps == 200){
+		if (steps == 200) {
 			Random i = new Random();
 			Direction dr = dirGen.generate(i);
-			dir= dir.turnTowards(dr, 15);
+			dir = dir.turnTowards(dr, 15);
 			steps = 0;
 		}
 		// go towards center if we're close to the border
@@ -234,12 +234,11 @@ public class SimMaleLion extends AbstractMovingObject implements IEdibleObject {
 	public double eat(double howMuch) {
 		double deltaSize = Math.min(size, howMuch / NUTRITION_FACTOR);
 		size -= deltaSize;
-		nutrition -= howMuch*NUTRITION_FACTOR;
+		nutrition -= howMuch * NUTRITION_FACTOR;
 		if (size == 0)
 			destroy();
 		return deltaSize * NUTRITION_FACTOR;
 	}
-	
 
 	@Override
 	public double getNutritionalValue() {

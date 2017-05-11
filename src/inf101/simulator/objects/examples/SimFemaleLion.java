@@ -19,14 +19,16 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-public class SimFemaleLion extends AbstractMovingObject {
+public class SimFemaleLion extends AbstractMovingObject implements IEdibleObject {
 	private static final double defaultSpeed = 1.5;
 	private static Habitat habitat;
 	private Image img = MediaHelper.getImage("sarabi.png");
 	private ArrayList<IEdibleObject> foodLion = new ArrayList<>();
+	private static final double NUTRITION_FACTOR = 100;
+	private double size = 1.0;
 	private double nutrition = 1000.0;
 	private double barValue = 1.0;
-	private double hBar = 0.90;
+	private double hBar = 0.0;
 	private boolean born = false;
 	private int steps = 0;
 	private static DirectionGenerator dirGen = new DirectionGenerator();
@@ -39,15 +41,14 @@ public class SimFemaleLion extends AbstractMovingObject {
 	@Override
 	public void draw(GraphicsContext context) {
 		super.draw(context);
-		context.translate(0, getHeight());
-		context.scale(1, -1);
+		if(-90 < super.getDirection().toAngle() && super.getDirection().toAngle() < 90){
+			context.translate(0, getHeight());
+			context.scale(1.0, -1.0);
+			
+		}
 		context.drawImage(img, 1.0, 0.0, getWidth(), getHeight());
 		super.drawBar(context, barValue, 0, Color.RED, Color.BLUE);
 		super.drawBar(context, hBar, 3 / 2, Color.YELLOW, Color.GREEN);
-		// GraphicsHelper.strokeArcAt(context, getWidth() / 2, getHeight() / 2,
-		// VIEW_DISTANCE, 0, VIEW_ANGLE);
-		// context.setStroke(Color.YELLOW.deriveColor(0.0, 1.0, 1.0, 0.5));
-		;
 	}
 
 	public IEdibleObject getClosestFood() {
@@ -217,5 +218,18 @@ public class SimFemaleLion extends AbstractMovingObject {
 		return angle;
 
 	}
+	@Override
+	public double eat(double howMuch) {
+		double deltaSize = Math.min(size, howMuch / NUTRITION_FACTOR);
+		size -= deltaSize;
+		nutrition -= howMuch * NUTRITION_FACTOR;
+		if (size == 0)
+			destroy();
+		return deltaSize * NUTRITION_FACTOR;
+	}
 
+	@Override
+	public double getNutritionalValue() {
+		return size * NUTRITION_FACTOR;
+	}
 }

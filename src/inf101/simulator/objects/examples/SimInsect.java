@@ -20,7 +20,7 @@ public class SimInsect extends AbstractMovingObject implements IEdibleObject {
 	private static Habitat habitat;
 	private static final double NUTRITION_FACTOR = 10;
 	private static final double DIAMETER = 25;
-	private Image img = MediaHelper.getImage("bug2.jpg");
+	private Image img = MediaHelper.getImage("bug.png");
 	private double energyLevel = 1;
 	private double size = 1.0;
 	private int steps = 0;
@@ -32,14 +32,19 @@ public class SimInsect extends AbstractMovingObject implements IEdibleObject {
 		this.size = size;
 		
 	}
+
 	@Override
 	public void draw(GraphicsContext context) {
 		super.draw(context);
-		context.translate(0, getHeight());
-		context.scale(1, -1);
+		if(-90 < super.getDirection().toAngle() && super.getDirection().toAngle() < 90){
+			context.translate(0, getHeight());
+			context.scale(1.0, -1.0);
+			
+		}
 		context.drawImage(img, 1.0, 0.0, getWidth(), getHeight());
 		super.drawBar(context, energyLevel, 0, Color.PINK, Color.BLUE);
 	}
+	
 	public double getEnergy(){
 		return energyLevel;
 	}

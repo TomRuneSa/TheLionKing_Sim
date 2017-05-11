@@ -113,7 +113,7 @@ public class SimMareCatTest {
 		hab.addObject(sim1);
 		hab.addObject(hyena);
 
-		for (int i = 0; i < 12000; i++) {
+		for (int i = 0; i < 10000; i++) {
 			hyena.SetGetNutrition(1000);
 			sim1.SetGetNutrition(1000);
 			hab.step();

@@ -34,11 +34,11 @@ public class Setup {
 		for (int i = 0; i < 1; i++) {
 
 			SimMain.registerSimObjectFactory((Position pos, Habitat hab) -> new SimInsect(pos, habitat,
-					main.getRandom().nextDouble() * 1.5 + 0.5), "SimInsect", "bug2.jpg");
+					main.getRandom().nextDouble() * 1.5 + 0.5), "SimInsect", "bug.png");
 			SimMain.registerSimObjectFactory((Position pos, Habitat hab) -> new SimBird(pos, habitat), "SimBird",
 					"bird1.png");
 			SimMain.registerSimObjectFactory((Position pos, Habitat hab) -> new SimHyena(pos, habitat, 2.3), "SimHyena",
-					"hyena.jpg");
+					"hyena.png");
 		}
 
 	}
@@ -48,10 +48,10 @@ public class Setup {
 	 * random intervals
 	 */
 	public static void step(SimMain main, Habitat habitat) {
-//		if (main.getRandom().nextInt(400) == 0) {
-//			habitat.addObject(new SimTree(main.randomPos(), habitat));
-//			habitat.addObject(new SimInsect(main.randomPos(),habitat,
-//					main.getRandom().nextDouble() * 1.5 + 0.5));
-//		}
+		if (main.getRandom().nextInt(400) == 0) {
+			habitat.addObject(new SimTree(main.randomPos(), habitat));
+			habitat.addObject(new SimInsect(main.randomPos(),habitat,
+					main.getRandom().nextDouble() * 1.5 + 0.5));
+		}
 	}
 }

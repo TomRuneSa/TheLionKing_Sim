@@ -87,32 +87,6 @@ public class SimMaleLionTest {
 		assertFalse("Animal should be gone", sim1.exists());
 	}
 
-	/**
-	 * Test scenario: Places male and female in a habitat, and sets their
-	 * position. After xxx steps the male should be facing the female.
-	 */
-	@Test
-	public void willFollowTest() {
-		Habitat hab = new Habitat(main, 500, 500);
-		SimMaleLion sim1 = new SimMaleLion(new Position(250, 250), hab);
-		SimFemaleLion sim2 = new SimFemaleLion(new Position(270, 250), hab);
-		hab.addObject(sim1);
-		hab.addObject(sim2);
-
-		for (int i = 0; i < 500; i++) {
-			sim1.SetGetNutrition(1000);
-			sim2.SetGetNutrition(1000);
-			sim1.SetGethBar(0.95);
-			sim2.SetGethBar(0.95);
-
-			hab.step();
-		}
-		double ang = Math.abs(
-				sim1.getPosition().directionTo(sim2.getPosition()).toAngle() - sim1.getDirection().toAngle());
-		assertTrue(ang<45 || ang >(360-45));
-//		assertTrue(Math.abs(
-//				sim1.getPosition().directionTo(sim2.getPosition()).toAngle() - sim1.getDirection().toAngle()) < 45);
-	}
 
 	/**
 	 * Test scenario: check that marecat avoid hyenas

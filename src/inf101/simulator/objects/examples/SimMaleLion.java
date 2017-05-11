@@ -20,11 +20,11 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 public class SimMaleLion extends AbstractMovingObject implements IEdibleObject {
-	private static final double defaultSpeed = 1.5;
+	private static final double defaultSpeed = 1.7;
 	private static Habitat habitat;
 	private Image img = MediaHelper.getImage("mufasa.png");
 	private ArrayList<IEdibleObject> foodLion = new ArrayList<>();
-	private static final double DIAMETER = 40;
+	
 	private static final double NUTRITION_FACTOR = 100;
 	private double size = 1.0;
 	private double nutrition = 1000.0;
@@ -42,7 +42,7 @@ public class SimMaleLion extends AbstractMovingObject implements IEdibleObject {
 
 	public void SetGethBar(double value) {
 		if (value > 1 || value < 0) {
-			System.out.println("The value has to be between 0 and 1");
+			System.out.println("The value has to be between 0 and 100");
 			return;
 		}
 		this.hBar = value;
@@ -55,8 +55,11 @@ public class SimMaleLion extends AbstractMovingObject implements IEdibleObject {
 	@Override
 	public void draw(GraphicsContext context) {
 		super.draw(context);
-		context.translate(0, getHeight());
-		context.scale(1, -1);
+		if(-90 < super.getDirection().toAngle() && super.getDirection().toAngle() < 90){
+			context.translate(0, getHeight());
+			context.scale(1.0, -1.0);
+			
+		}
 		context.drawImage(img, 1.0, 0.0, getWidth(), getHeight());
 		super.drawBar(context, barValue, 0, Color.RED, Color.BLUE);
 		super.drawBar(context, hBar, 3 / 2, Color.YELLOW, Color.GREEN);
@@ -177,18 +180,16 @@ public class SimMaleLion extends AbstractMovingObject implements IEdibleObject {
 				}
 			}
 		}
-		System.out.println(hunger);
-		System.out.println(hBar);
 		if (hunger > 0 && (hBar > 0.85 && hBar < 1.00)) {
 			for (ISimObject mate : habitat.nearbyObjects(this, getRadius() + 400)) {
 				if (mate instanceof SimFemaleLion) {
 					double simRepAngle = this.getPosition().directionTo(mate.getPosition()).toAngle();
 					double simAngle = this.getDirection().toAngle();
 					double angle = angleFix(simRepAngle, simAngle);
-					System.out.println(((SimFemaleLion) mate).getHBar());
+
 					if (((SimFemaleLion) mate).getHBar() > 0.85 && ((SimFemaleLion) mate).getHBar() < 1.00) {
 						if (angle < 45 && angle > -45) {
-							dir = dir.turnTowards(super.directionTo(mate.getPosition()), 2.5);
+							dir = dir.turnTowards(this.directionTo(mate.getPosition()), 2.5);
 							if (this.distanceToTouch(mate) < 5) {
 								impregnate = true;
 								if (((SimFemaleLion) mate).getBorn()) {

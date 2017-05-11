@@ -24,7 +24,7 @@ public class SimHyena extends AbstractMovingObject implements IEdibleObject, ISi
 	private static final double DIAMETER = 40;
 	private static final double NUTRITION_FACTOR = 100;
 	private double size = 1.0;
-	private Image img = MediaHelper.getImage("hyena.jpg");
+	private Image img = MediaHelper.getImage("hyena.png");
 	private ArrayList<IEdibleObject> foodHyena = new ArrayList<>();
 	private double nutrition = 1000.0;
 	private double barValue = 1.0;
@@ -43,8 +43,11 @@ public class SimHyena extends AbstractMovingObject implements IEdibleObject, ISi
 	@Override
 	public void draw(GraphicsContext context) {
 		super.draw(context);
-		context.translate(0, getHeight());
-		context.scale(1, -1);
+		if(-90 < super.getDirection().toAngle() && super.getDirection().toAngle() < 90){
+			context.translate(0, getHeight());
+			context.scale(1.0, -1.0);
+			
+		}
 		context.drawImage(img, 1.0, 0.0, getWidth(), getHeight());
 		super.drawBar(context, barValue, 0, Color.RED, Color.BLUE);
 	}

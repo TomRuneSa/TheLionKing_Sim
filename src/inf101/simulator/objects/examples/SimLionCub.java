@@ -35,8 +35,11 @@ public class SimLionCub extends AbstractMovingObject {
 	@Override
 	public void draw(GraphicsContext context) {
 		super.draw(context);
-		context.translate(0, getHeight());
-		context.scale(1, -1);
+		if(-90 < super.getDirection().toAngle() && super.getDirection().toAngle() < 90){
+			context.translate(0, getHeight());
+			context.scale(1.0, -1.0);
+			
+		}
 		context.drawImage(img, 1.0, 0.0, getWidth(), getHeight());
 		super.drawBar(context, barValue, 0, Color.RED, Color.BLUE);
 	}

@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Random;
 
 import inf101.simulator.Direction;
-import inf101.simulator.GraphicsHelper;
 import inf101.simulator.Habitat;
 import inf101.simulator.MediaHelper;
 import inf101.simulator.Position;
@@ -19,10 +18,10 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 public class SimWarthog extends AbstractMovingObject implements IEdibleObject {
-	private static final double defaultSpeed = 1.0;
+	private static final double defaultSpeed = 1.3;
 	private static Habitat habitat;
-	private static final double NUTRITION_FACTOR = 10;
-	private Image img = MediaHelper.getImage("pumba.jpg");
+	private static final double NUTRITION_FACTOR = 5;
+	private Image img = MediaHelper.getImage("pumba.png");
 	private double size = 1.0;
 	private ArrayList<IEdibleObject> insects = new ArrayList<>();
 	private double nutrition = 1000.0;
@@ -39,8 +38,11 @@ public class SimWarthog extends AbstractMovingObject implements IEdibleObject {
 	@Override
 	public void draw(GraphicsContext context) {
 		super.draw(context);
-		context.translate(0, getHeight());
-		context.scale(1, -1);
+		if(-90 < super.getDirection().toAngle() && super.getDirection().toAngle() < 90){
+			context.translate(0, getHeight());
+			context.scale(1.0, -1.0);
+			
+		}
 		context.drawImage(img, 1.0, 0.0, getWidth(), getHeight());
 		super.drawBar(context, barValue, 0, Color.RED, Color.BLUE);
 	}
@@ -93,7 +95,7 @@ public class SimWarthog extends AbstractMovingObject implements IEdibleObject {
 
 	@Override
 	public double getNutritionalValue() {
-		return 50;
+		return size * NUTRITION_FACTOR;
 	}
 
 	public IEdibleObject getBestFood() {

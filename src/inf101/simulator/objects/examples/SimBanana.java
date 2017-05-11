@@ -12,7 +12,7 @@ public class SimBanana extends AbstractSimObject implements IEdibleObject {
 	private static final double NUTRITION_FACTOR = 10.0;
 	private static final double DIAMETER = 25;
 	private double size = 1.0;
-	private Image img = MediaHelper.getImage("banana.jpg");
+	private Image img = MediaHelper.getImage("banana.png");
 
 	public SimBanana(Position pos, double size) {
 		super(new Direction(0), pos);

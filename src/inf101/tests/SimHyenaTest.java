@@ -123,15 +123,15 @@ public class SimHyenaTest {
 		hab.addObject(sim1);
 		hab.addObject(male);
 
-		for (int i = 0; i <1000; i++) {
+		for (int i = 0; i <100; i++) {
 			male.SetGetNutrition(1000);			
 			sim1.SetGetNutrition(1000);
-			hab.step();
+			if(hab.contains(sim1.getPosition(), 200)){
+				hab.step();
+				}
 			assertTrue(sim1.getPosition().distanceTo(male.getPosition()) > sim1.getRadius() + male.getRadius());
-//			if ((sim1.getPosition().distanceTo(Lion1.getPosition())) < sim1.getRadius() + Lion1.getRadius() 
-//			|| (sim1.getPosition().distanceTo(Lion2.getPosition())) < sim1.getRadius() + Lion2.getRadius()) {
-//				fail("To close");
-//			}
+
+		
 		}
 	}
 }

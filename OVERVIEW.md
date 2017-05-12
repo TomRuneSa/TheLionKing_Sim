@@ -88,6 +88,16 @@ Common for all moving objects is their healthbar. Every object this accounts for
 	
 - Marecat
 	- The marecat is always trying to follow the warthog as long as the marecat isn't hungry. He searches for the warthog as far as he can see, and then follows him until he gets hungry. When its hungry it'll stray away from the warthog and go look for insects to eat. He will try to aviod hyenas and lions to the best of his abilities. 
+
+-Insect
+	- The insect does nothing but get eaten. It just wanders around the habitat. 
+	
+-Bird
+	- If the bird isn't hungry, it will try to find the male lion and follow it for protection. If it is hungry though, it will stop following the lion and go look for insects to eat. The bird can get eaten by hyenas. 
+	
+-Hyena
+	- The hyena fears nothing except the lions, which they will try to avoid. Allthough, if a member of a hyena pack that has 3 members or more is starving, it will call on the rest of the pack and attack the lion for food. 
+If it's starving or is only moderately hungry it'll eat marecats, warthogs, 
 	
 
 ## Svar på spørsmål

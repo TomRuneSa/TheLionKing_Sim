@@ -97,10 +97,12 @@ public class SimMonkeyTest {
 		hab.addObject(monkey);
 		hab.addObject(hyena);
 
-		for (int i = 0; i < 6000; i++) {
+		for (int i = 0; i < 150000; i++) {
 			hyena.SetGetNutrition(1000);
 			monkey.SetGetNutrition(1000);
+			if(hab.contains(monkey.getPosition(), 200)){
 			hab.step();
+			}
 			if((monkey.getPosition().distanceTo(hyena.getPosition())) < monkey.getRadius() + hyena.getRadius()){
 				fail("To close");
 			}

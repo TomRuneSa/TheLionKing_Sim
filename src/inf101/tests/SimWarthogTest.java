@@ -97,7 +97,9 @@ public class SimWarthogTest {
 		for (int i = 0; i < 6000; i++) {
 			hyena.SetGetNutrition(1000);
 			sim1.SetGetNutrition(1000);
-			hab.step();
+			if(hab.contains(sim1.getPosition(), 200)){
+				hab.step();
+				}
 			if((sim1.getPosition().distanceTo(hyena.getPosition())) < sim1.getRadius() + hyena.getRadius()){
 				fail("To close");
 			}

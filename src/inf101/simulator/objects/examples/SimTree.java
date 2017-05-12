@@ -29,13 +29,11 @@ public class SimTree extends AbstractSimObject {
 
 	@Override
 	public double getHeight() {
-
 		return height;
 	}
 
 	@Override
 	public double getWidth() {
-
 		return width;
 	}
 

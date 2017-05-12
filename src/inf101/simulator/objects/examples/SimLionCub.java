@@ -122,6 +122,19 @@ public class SimLionCub extends AbstractMovingObject implements ISimListener {
 	public double getWidth() {
 		return 90;
 	}
+	public double getNutrition() {
+		return nutrition;// Returns the nutrition value
+	}
+
+	public void SetGetNutrition(double nutrition) {
+		if (nutrition > 1000 || nutrition < 0) {
+			System.out.println("The nutrition has to be more than 0 and less than 1000");
+			return;
+		}
+		this.nutrition = nutrition;// Set's the animals nutrition to the new
+									// value.
+	}
+	
 
 	@Override
 	public void step() {

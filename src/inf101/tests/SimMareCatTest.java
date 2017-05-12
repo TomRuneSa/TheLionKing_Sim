@@ -85,16 +85,19 @@ public class SimMareCatTest {
 
 	/**
 	 * Test scenario: check that marecat avoid hyenas
+	 * 
+	 * * Issue: It may happen that the marecat will get stuck between the edge of the habitat and the hyena,
+	 * If that happens, the test will fail, because it'll get to close to the hyena.
 	 */
 	@Test
 	public void avoidHyenas() {
 		Habitat hab = new Habitat(main, 1000, 1000);
-		SimMareCat sim1 = new SimMareCat(new Position(1000, 1000), hab);
+		SimMareCat sim1 = new SimMareCat(new Position(100, 1000), hab);
 		SimHyena hyena = new SimHyena(new Position(0, 500), hab, 2.3);
 		hab.addObject(sim1);
 		hab.addObject(hyena);
 
-		for (int i = 0; i < 10000; i++) {
+		for (int i = 0; i < 6000; i++) {
 			hyena.SetGetNutrition(1000);
 			sim1.SetGetNutrition(1000);
 			hab.step();

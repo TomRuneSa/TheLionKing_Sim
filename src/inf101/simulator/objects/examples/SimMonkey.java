@@ -150,6 +150,16 @@ public class SimMonkey extends AbstractMovingObject implements IEdibleObject, IS
 	public double getWidth() {
 		return 120;
 	}
+	public void SetGetNutrition(double nutrition) {
+		if (nutrition > 1000 || nutrition < 0) {
+			System.out.println("The nutrition has to be more than 0 and less than 1000");
+			return;
+		}
+		this.nutrition = nutrition;// Sets the animals nutrition to the new
+									// value.
+	}
+
+	
 
 	@Override
 	public void step() {

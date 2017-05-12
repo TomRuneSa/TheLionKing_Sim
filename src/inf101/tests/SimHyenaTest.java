@@ -11,6 +11,7 @@ import inf101.simulator.SimMain;
 import inf101.simulator.objects.examples.SimFemaleLion;
 import inf101.simulator.objects.examples.SimHyena;
 import inf101.simulator.objects.examples.SimInsect;
+import inf101.simulator.objects.examples.SimLionCub;
 import inf101.simulator.objects.examples.SimMaleLion;
 import inf101.simulator.objects.examples.SimMareCat;
 import inf101.simulator.objects.examples.SimMonkey;
@@ -51,6 +52,29 @@ public class SimHyenaTest {
 		assertFalse("Food should be gone", feed2.exists());
 	}
 
+	/**
+	 * Test scenario: Places a Lion cub with a starving hyena in a habitat. The hyena
+	 * should not eat the cub within 600 steps.
+	 */
+	@Test
+	public void willNotEatTest() {
+		Habitat hab = new Habitat(main, 500, 500);
+		SimHyena sim1 = new SimHyena(new Position(250, 250), hab, 2.5);
+		SimLionCub cub = new SimLionCub(new Position(270, 250), hab);
+
+		hab.addObject(sim1);
+		hab.addObject(cub);
+		
+		for (int i = 0; i < 600; i++) {
+			sim1.SetGetNutrition(299);
+			cub.SetGetNutrition(1000);
+			
+			hab.step();
+		}
+
+		assertTrue("Food should not be gone", cub.exists());
+
+	}
 	/**
 	 * Test scenario: Places marecat in a habitat, and gets its energy before
 	 * and after steps, and then compares them. After 200 steps the energy

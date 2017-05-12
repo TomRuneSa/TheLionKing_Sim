@@ -84,6 +84,18 @@ public class SimBird extends AbstractMovingObject implements IEdibleObject, ISim
 		return 50;
 	}
 
+	public void SetGetNutrition(double nutrition) {
+		if (nutrition > 1000 || nutrition < 0) {
+			System.out.println("The nutrition has to be more than 0 and less than 1000");
+			return;
+		}
+		this.nutrition = nutrition;// Sets the animals nutrition to the new
+									// value.
+	}
+	public double getNutrition() {
+		return nutrition;// Returns the nutrition value
+	}
+	
 	@Override
 	public double getWidth() {
 		return 50;

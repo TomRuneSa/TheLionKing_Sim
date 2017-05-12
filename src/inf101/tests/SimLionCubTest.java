@@ -21,7 +21,7 @@ public class SimLionCubTest {
 
 	/**
 	 * Test scenario: Places a lion cub and an insect in a habitat. The lion
-	 * should eat the food objects within 500 steps because of movement and the
+	 * should eat the food object within 500 steps because of movement and the
 	 * eyesight of the lion.
 	 */
 	@Test
@@ -43,7 +43,7 @@ public class SimLionCubTest {
 	}
 
 	/**
-	 * Test scenario: Places FemaleLion in a habitat. The lion should die within
+	 * Test scenario: Places a lion cub in a habitat. The lion should die within
 	 * 1000 steps.
 	 */
 	@Test

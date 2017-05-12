@@ -189,7 +189,7 @@ public class SimFemaleLion extends AbstractMovingObject implements IEdibleObject
 			hBar = 0;
 			//if a cub has been born, the hBar will always be 0.
 		} else {
-//			hBar += 0.0007;
+			hBar += 0.0007;
 			//The hBar will increase each time step() is called.
 			if (hBar > 1) {
 				hBar = 0;
@@ -273,7 +273,7 @@ public class SimFemaleLion extends AbstractMovingObject implements IEdibleObject
 		}
 		}
 		else{
-			SimEvent event = new SimEvent(this, "Go", this, habitat.getCenter());
+			SimEvent event = new SimEvent(this, "Long live the king!", this, habitat.getCenter());
 			habitat.triggerEvent(event);
 			harmony++;
 			
@@ -304,7 +304,7 @@ public class SimFemaleLion extends AbstractMovingObject implements IEdibleObject
 
 	@Override
 	public void eventHappened(SimEvent event) {
-		if (event.getType().equals("Go")) {
+		if (event.getType().equals("Long live the king!")) {
 			for (ISimObject rock : habitat.allObjects()){
 				if(rock instanceof SimRock){
 					dir = dir.turnTowards(this.directionTo(rock), .7);

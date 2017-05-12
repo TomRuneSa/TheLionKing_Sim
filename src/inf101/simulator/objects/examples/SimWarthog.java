@@ -164,7 +164,7 @@ public class SimWarthog extends AbstractMovingObject implements IEdibleObject, I
 		if(!SimFemaleLion.getCircleOfLife()){
 		steps++;
 		// Increases the step counter
-		nutrition -= 0.2;
+		nutrition -= 0.1;
 		// The objects nutrition will decrease each time step() is called.
 		barValue = nutrition / 1000;
 		// Calculates the value that will be shown in the bar over this objects
@@ -268,7 +268,8 @@ public class SimWarthog extends AbstractMovingObject implements IEdibleObject, I
 
 	@Override
 	public void eventHappened(SimEvent event) {
-		if (event.getType().equals("Go")) {
+		if (event.getType().equals("Long live the king!")) {
+			super.say(event.getType());
 			dir = dir.turnTowards(directionTo((Position) event.getData()), .5);
 		}
 	}

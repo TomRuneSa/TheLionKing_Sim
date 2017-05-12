@@ -51,7 +51,7 @@ public class Setup {
 	 */
 	public static void step(SimMain main, Habitat habitat) {
 		if(!SimFemaleLion.getCircleOfLife()){
-		if (main.getRandom().nextInt(400) == 0) {
+		if (main.getRandom().nextInt(300) == 0) {
 			habitat.addObject(new SimTree(main.randomPos(), habitat));
 			habitat.addObject(new SimInsect(main.randomPos(),habitat,
 					main.getRandom().nextDouble() * 1.5 + 0.5));

@@ -257,7 +257,8 @@ public class SimBird extends AbstractMovingObject implements IEdibleObject, ISim
 
 	@Override
 	public void eventHappened(SimEvent event) {
-		if (event.getType().equals("Go")) {
+		if (event.getType().equals("Long live the king!")) {
+			super.say(event.getType());
 			dir = dir.turnTowards(directionTo((Position) event.getData()), .5);
 		}
 	}

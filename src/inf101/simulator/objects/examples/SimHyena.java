@@ -357,11 +357,12 @@ public class SimHyena extends AbstractMovingObject implements IEdibleObject, ISi
 
 	@Override
 	public void eventHappened(SimEvent event) {
-		if (event.getType().equals("Go")) {
+		if (event.getType().equals("Long live the king!")) {
+			super.say(event.getType());
 			dir = dir.turnTowards(directionTo((Position) event.getData()), .5);
 		}
 		// Tells what's supposed to happen when this event is triggered, which
-		// is that the listeners will move towards å position
+		// is that the listeners will move towards a position
 	}
 
 }

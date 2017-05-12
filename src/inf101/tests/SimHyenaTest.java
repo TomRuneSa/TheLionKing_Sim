@@ -73,7 +73,7 @@ public class SimHyenaTest {
 
 	}
 	/**
-	 * Test scenario: Places marecat in a habitat, and gets its energy before
+	 * Test scenario: Places hyena in a habitat, and gets its energy before
 	 * and after steps, and then compares them. After 200 steps the energy
 	 * should have dropped.
 	 */
@@ -96,8 +96,8 @@ public class SimHyenaTest {
 	}
 
 	/**
-	 * Test scenario: Places marecat in a habitat, and sets its nutrition to
-	 * 100. The marecat should die within 600 steps.
+	 * Test scenario: Places hyena in a habitat, and sets its nutrition to
+	 * 100. The hyena should die within 600 steps.
 	 */
 	@Test
 	public void willDieTest() {
@@ -112,7 +112,7 @@ public class SimHyenaTest {
 	}
 
 	/**
-	 * Test scenario: check that marecat avoid hyenas
+	 * Test scenario: check that hyenas avoid lions
 	 */
 	@Test
 	public void avoidLions() {

@@ -86,8 +86,6 @@ public class SimMareCatTest {
 	/**
 	 * Test scenario: check that marecat avoid hyenas
 	 * 
-	 * * Issue: It may happen that the marecat will get stuck between the edge of the habitat and the hyena,
-	 * If that happens, the test will fail, because it'll get to close to the hyena.
 	 */
 	@Test
 	public void avoidHyenas() {

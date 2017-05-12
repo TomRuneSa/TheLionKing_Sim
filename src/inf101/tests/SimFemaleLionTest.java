@@ -22,7 +22,7 @@ public class SimFemaleLionTest {
 
 	/**
 	 * Test scenario: Places a female lion and a marecat in a habitat. The lion
-	 * should eat the food objects within 500 steps because of movement and the
+	 * should eat the food object within 500 steps because of movement and the
 	 * eyesight of the lion.
 	 */
 	@Test

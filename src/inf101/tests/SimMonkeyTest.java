@@ -86,8 +86,6 @@ public class SimMonkeyTest {
 	/**
 	 * Test scenario: check that monkey avoid hyenas
 	 * 
-	 * Issue: It may happen that the monkey will get stuck between the edge of the habitat and the hyena,
-	 * If that happens, the test will fail, because it'll get to close to the hyena.
 	 */
 	@Test
 	public void avoidHyenas() {

@@ -314,7 +314,7 @@ public class SimMaleLion extends AbstractMovingObject implements IEdibleObject, 
 
 	@Override
 	public void eventHappened(SimEvent event) {
-		if (event.getType().equals("Go")) {
+		if (event.getType().equals("Long live the king!")) {
 			for (ISimObject rock : habitat.allObjects()){
 				if(rock instanceof SimRock){
 					dir = dir.turnTowards(this.directionTo(rock), .7);

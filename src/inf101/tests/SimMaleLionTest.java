@@ -25,8 +25,8 @@ public class SimMaleLionTest {
 	}
 
 	/**
-	 * Test scenario: Places a warthog and marecat with a Malelion in a habitat.
-	 * The lion should eat both objects within 500 steps because of movement and
+	 * Test scenario: Places a marecat with a Malelion in a habitat.
+	 * The lion should eat the food within 500 steps because of movement and
 	 * the eyesight of the lion.
 	 */
 	@Test
@@ -69,7 +69,7 @@ public class SimMaleLionTest {
 
 	/**
 	 * Test scenario: Places horny MaleLion, and a horny female lion in a habitat. 
-	 * Within 2 steps, a cub should be born.
+	 * Within 2 steps, a cub should be impregnated.
 	 * 
 	 * Issue: If the step counter is to high, it will try to play a musicfile that it can't reach, 
 	 * and therefore will fail.

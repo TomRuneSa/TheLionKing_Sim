@@ -10,6 +10,7 @@ import inf101.simulator.objects.examples.SimHyena;
 import inf101.simulator.objects.examples.SimInsect;
 import inf101.simulator.objects.examples.SimMaleLion;
 import inf101.simulator.objects.examples.SimRepellant;
+import inf101.simulator.objects.examples.SimRock;
 import inf101.simulator.objects.examples.SimTree;
 import inf101.simulator.objects.examples.SimWarthog;
 import inf101.simulator.objects.examples.SimMareCat;
@@ -30,6 +31,7 @@ public class Setup {
 		habitat.addObject(new SimFemaleLion(main.randomPos(), habitat));
 		habitat.addObject(new SimTree(main.randomPos(), habitat));
 		habitat.addObject(new SimMonkey(main.randomPos(), habitat));
+		habitat.addObject(new SimRock(new Position(1649.8333333333335, 247.0), habitat));
 
 		for (int i = 0; i < 1; i++) {
 
@@ -48,10 +50,12 @@ public class Setup {
 	 * random intervals
 	 */
 	public static void step(SimMain main, Habitat habitat) {
+		if(!SimFemaleLion.getCircleOfLife()){
 		if (main.getRandom().nextInt(400) == 0) {
 			habitat.addObject(new SimTree(main.randomPos(), habitat));
 			habitat.addObject(new SimInsect(main.randomPos(),habitat,
 					main.getRandom().nextDouble() * 1.5 + 0.5));
 		}
+	}
 	}
 }

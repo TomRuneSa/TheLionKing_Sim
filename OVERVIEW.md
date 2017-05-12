@@ -9,7 +9,7 @@ tomrunesaeveras@hotmail.no
 
 Common for all moving objects is their healthbar. Every object this accounts for has a maximum nutrition of 1000, which decreases a certain amount for each time step() is called. The nutrition is sent to "hungerStatus" to decide how hungry the object is. "hungerStatus" returns 1 for full, 0 for hungry, and -1 for starving. This decides how the object should behave. 
 
-Rules of the program:
+###Rules of the program:
 - Lions
 	- Male
 		- If the male lion is full, he moves around aimlessly. Both the male and female lion has a bar which decides 		how ready they are to mate. As long as the male is full, and the mating bar is within the range of being ready 		to mate, the male lion will search for a female lion within the field of vision. If he finds one, he will 		approach and chech if she is ready to mate as well. 
@@ -33,7 +33,7 @@ Rules of the program:
 		- The marecat is quite similar to the warthog when it comes to eating. If the marecat isn't looking for food 		it searches for the warthog, as the marecat think that the warthog can protect it. But the warthog does 		nothing to protect the marecat. If the warthog dies, the marecat will commit suicide to avoid beeing eaten.
 		
 - Insect
-		- The insects does nothing but being eaten. The insect just walks around with no meaning and doesn't try to 		avoid anything. 
+		- The insects does nothing but being eaten. The insect just walks around with no meaning and doesn't try to avoid anything. 
 		
 - Bird
 		- The bird looks for the male lionBut once the bird gets hungry, it strays away from the lion and looks for 		food. 
@@ -76,8 +76,13 @@ Rules of the program:
 -SimFemaleLion
 	- If the lion is full, it will just walk around aimlessly. Unless it gets impregnated, then it will give birth to a 	cub. This will only happen once.
 	If the lion is moderately hungry, it will search for warthogs, marecats and hyenas to eat. It will go for the best 	food it can see. If the lion is starving, it will search for the same animals to eat, but instead of going for the 	best one, it will go for the closest one so it'll get food as fast as possible.
+
 -Cub
-	-
+	- When the cub is born, it'll be born without beeing hungry, a mere miracle. As long as he's not hungry, he will by default look for his father, and follow him. But if he is following his father, and gets hungry, he will stray away so that he can look for food. The cub eats warthogs, marecats and insects. The order of eating is the same as the male and female lion. If hes moderately hungry, he'll go for the closest food, if hes starving he'll go for the closest food.
+	
+- Monkey
+	- If the monkey is full, he will walk around aimlesly, and try to avoid 
+	
 
 ## Svar på spørsmål
 1. The Position.move() takes in a direction in which the object should move, and a distance of which the object should move. If the distance is equals to zero, which means that there isn't any longer to move the object, it returns the position it's in before it was asked to move "0 distance". If not it moves the object in the direction that's asked, and returns the new position, by making a new position using the Position.makePos() method. 

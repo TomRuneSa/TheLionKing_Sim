@@ -10,6 +10,7 @@ import inf101.simulator.MediaHelper;
 import inf101.simulator.Position;
 import inf101.simulator.objects.AbstractMovingObject;
 import inf101.simulator.objects.IEdibleObject;
+import inf101.simulator.objects.ISimListener;
 import inf101.simulator.objects.ISimObject;
 import inf101.simulator.objects.SimEvent;
 import inf101.util.generators.DirectionGenerator;
@@ -17,10 +18,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-public class SimWarthog extends AbstractMovingObject implements IEdibleObject {
+public class SimWarthog extends AbstractMovingObject implements IEdibleObject, ISimListener {
 	private static final double defaultSpeed = 1.3;
 	private static Habitat habitat;
-	private static final double NUTRITION_FACTOR = 5;
+	private static final double NUTRITION_FACTOR = 50;
 	private Image img = MediaHelper.getImage("pumba.png");
 	private ArrayList<IEdibleObject> insects = new ArrayList<>();
 
@@ -39,7 +40,7 @@ public class SimWarthog extends AbstractMovingObject implements IEdibleObject {
 	public SimWarthog(Position pos, Habitat hab) {
 		super(new Direction(0), pos, defaultSpeed);
 		this.habitat = hab;
-
+		habitat.addListener(this, this);
 	}
 
 	@Override
@@ -100,6 +101,9 @@ public class SimWarthog extends AbstractMovingObject implements IEdibleObject {
 		// this object.
 		size -= deltaSize;
 		// The size decreases by "howMuch".
+		nutrition -= howMuch * NUTRITION_FACTOR;
+		// The nutrition decreases by howmuch* the nutrition factor of this
+		// object.
 		if (size == 0)
 			destroy();
 		// if the size goes all the way down to 0, this object will die.
@@ -129,7 +133,7 @@ public class SimWarthog extends AbstractMovingObject implements IEdibleObject {
 					// 45 degrees in both directions.
 				}
 			}
-			}
+		}
 
 		if (insects.size() == 0) {
 			return null;
@@ -157,59 +161,69 @@ public class SimWarthog extends AbstractMovingObject implements IEdibleObject {
 
 	@Override
 	public void step() {
+		if(!SimFemaleLion.getCircleOfLife()){
 		steps++;
-		//Increases the step counter
+		// Increases the step counter
 		nutrition -= 0.2;
-		//The objects nutrition will decrease each time step() is called. 
+		// The objects nutrition will decrease each time step() is called.
 		barValue = nutrition / 1000;
-		//Calculates the value that will be shown in the bar over this objects head. 
+		// Calculates the value that will be shown in the bar over this objects
+		// head.
 		int hunger = hungerStatus.hungerStatus(nutrition);
-		//Find out how hungry this object is. 
+		// Find out how hungry this object is.
 
 		for (ISimObject danger : habitat.allObjects()) {
 			if (danger instanceof SimHyena || danger instanceof SimMaleLion || danger instanceof SimFemaleLion) {
 				if (distanceTo(danger) < 200) {
-					//The cub senses danger within a certain range.
+					// The cub senses danger within a certain range.
 					Direction dir1 = directionTo(danger);
 					Direction dir2 = dir1.turnBack();
 					dir = dir.turnTowards(dir2, 2.2);
-					//Creates a direction towards the danger, another direction in the opposite direction,
-					//and then turns towards the opposite direction
+					accelerateTo(1.8 * defaultSpeed, 0.3);
+					// Creates a direction towards the danger, another direction
+					// in the opposite direction,
+					// and then turns towards the opposite direction
 				}
 			}
 		}
 
 		if (hunger == 0) {
 			IEdibleObject obj = getBestFood();
-			//If the warthog only is moderately hungry, it will search for the best food. 
+			// If the warthog only is moderately hungry, it will search for the
+			// best food.
 			if (obj != null) {
 				dir = dir.turnTowards(super.directionTo(obj), 2.4);
-				accelerateTo(1.8 * defaultSpeed, 0.3);
+				accelerateTo(1.8 * defaultSpeed, 0.2);
 				if (this.distanceToTouch(obj) < 5) {
 					double howMuchToEat = 1 - barValue;
-					//Eats the maximum amount it can without the bar going over it's limit.
+					// Eats the maximum amount it can without the bar going over
+					// it's limit.
 					obj.eat(howMuchToEat);
 					if (barValue < 1) {
 						nutrition += obj.getNutritionalValue();
-						//The nutrition has the objects nutritional value added.
+						// The nutrition has the objects nutritional value
+						// added.
 					}
 				}
 			}
 		}
 		if (hunger < 0) {
 			IEdibleObject obj = getClosestFood();
-			//If the warthog only is moderately hungry, it will search for the best food,
+			// If the warthog only is moderately hungry, it will search for the
+			// best food,
 			if (obj != null) {
 				dir = dir.turnTowards(super.directionTo(obj), 2.4);
-				//Turns towards the food and accelerates to catch up
+				// Turns towards the food and accelerates to catch up
 				accelerateTo(1.8 * defaultSpeed, 0.3);
 				if (this.distanceToTouch(obj) < 5) {
 					double howMuchToEat = 1 - barValue;
 					obj.eat(howMuchToEat);
-					//Eats the maximum amount it can without the bar going over it's limit.
+					// Eats the maximum amount it can without the bar going over
+					// it's limit.
 					if (barValue < 1) {
 						nutrition += obj.getNutritionalValue();
-						//The nutrition has the objects nutritional value added.
+						// The nutrition has the objects nutritional value
+						// added.
 					}
 				}
 			}
@@ -219,7 +233,8 @@ public class SimWarthog extends AbstractMovingObject implements IEdibleObject {
 			Direction dr = dirGen.generate(i);
 			dir = dir.turnTowards(dr, 15);
 			steps = 0;
-			//Creates a new direction every 200 steps and resets the steps counter
+			// Creates a new direction every 200 steps and resets the steps
+			// counter
 		}
 		// go towards center if we're close to the border
 		if (!habitat.contains(getPosition(), getRadius() * 1.2)) {
@@ -229,21 +244,33 @@ public class SimWarthog extends AbstractMovingObject implements IEdibleObject {
 				accelerateTo(5 * defaultSpeed, 0.3);
 			}
 		}
+		}
+		else{
+			nutrition = 1000;
+		}
 
 		accelerateTo(defaultSpeed, 0.1);
 
 		if (nutrition < 0.1) {
 			super.destroy();
-			//This object will die if it's nutrition goes to far down
+			// This object will die if it's nutrition goes to far down
 		}
 		super.step();
 	}
 
 	public double angleFix(double a, double b) {
-		double angle = ((((a - b) % 360) + 540) % 360) - 180; 
+		double angle = ((((a - b) % 360) + 540) % 360) - 180;
 		return angle;
-		//This part of the code was found on stackoverflow. 
-		//It creates a double value that corresponds to an angle. It does this with two double values that it gets as input. 
+		// This part of the code was found on stackoverflow.
+		// It creates a double value that corresponds to an angle. It does this
+		// with two double values that it gets as input.
+	}
+
+	@Override
+	public void eventHappened(SimEvent event) {
+		if (event.getType().equals("Go")) {
+			dir = dir.turnTowards(directionTo((Position) event.getData()), .5);
+		}
 	}
 
 }

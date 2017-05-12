@@ -10,6 +10,7 @@ import inf101.simulator.MediaHelper;
 import inf101.simulator.Position;
 import inf101.simulator.objects.AbstractMovingObject;
 import inf101.simulator.objects.IEdibleObject;
+import inf101.simulator.objects.ISimListener;
 import inf101.simulator.objects.ISimObject;
 import inf101.simulator.objects.SimEvent;
 import inf101.util.generators.DirectionGenerator;
@@ -17,10 +18,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-public class SimMareCat extends AbstractMovingObject implements IEdibleObject {
-	private static final double defaultSpeed = 1.0;
+public class SimMareCat extends AbstractMovingObject implements IEdibleObject, ISimListener {
+	private static final double defaultSpeed = 1.2;
 	private static Habitat habitat;
-	private static final double NUTRITION_FACTOR = 10;
+	private static final double NUTRITION_FACTOR = 30;
 	private Image img = MediaHelper.getImage("Timon.png");
 	private double size = 1.0;
 	private ArrayList<IEdibleObject> insects = new ArrayList<>();
@@ -38,6 +39,7 @@ public class SimMareCat extends AbstractMovingObject implements IEdibleObject {
 	public SimMareCat(Position pos, Habitat hab) {
 		super(new Direction(0), pos, defaultSpeed);
 		SimMareCat.habitat = hab;
+		habitat.addListener(this, this);
 	}
 
 	@Override
@@ -98,6 +100,9 @@ public class SimMareCat extends AbstractMovingObject implements IEdibleObject {
 		// this object.
 		size -= deltaSize;
 		// The size decreases by "howMuch".
+		nutrition -= howMuch * NUTRITION_FACTOR;
+		// The nutrition decreases by howmuch* the nutrition factor of this
+		// object.
 		if (size == 0)
 			destroy();
 		// if the size goes all the way down to 0, this object will die.
@@ -115,18 +120,18 @@ public class SimMareCat extends AbstractMovingObject implements IEdibleObject {
 		insects.clear();
 		for (ISimObject obj : habitat.nearbyObjects(this, getRadius() + 400)) {
 			if (obj instanceof SimInsect) {
-			// The objects that are edible for the monkey.
-			double simRepAngle = this.getPosition().directionTo(obj.getPosition()).toAngle();
-			double simAngle = this.getDirection().toAngle();
-			double angle = angleFix(simRepAngle, simAngle);
+				// The objects that are edible for the monkey.
+				double simRepAngle = this.getPosition().directionTo(obj.getPosition()).toAngle();
+				double simAngle = this.getDirection().toAngle();
+				double angle = angleFix(simRepAngle, simAngle);
 
-			if (angle < 45 && angle > -45) {
-				insects.add((IEdibleObject) obj);
-				// Makes sure that the banana only will be added to the list
-				// if it's in the field of vision,
-				// 45 degrees in both directions.
+				if (angle < 45 && angle > -45) {
+					insects.add((IEdibleObject) obj);
+					// Makes sure that the banana only will be added to the list
+					// if it's in the field of vision,
+					// 45 degrees in both directions.
+				}
 			}
-		}
 		}
 
 		if (insects.size() == 0) {
@@ -157,7 +162,7 @@ public class SimMareCat extends AbstractMovingObject implements IEdibleObject {
 	public void step() {
 
 		boolean follow = false;
-
+		if(!SimFemaleLion.getCircleOfLife()){
 		steps++;
 		// Increases the step counter
 		nutrition -= 0.2;
@@ -175,6 +180,7 @@ public class SimMareCat extends AbstractMovingObject implements IEdibleObject {
 					Direction dir1 = directionTo(danger);
 					Direction dir2 = dir1.turnBack();
 					dir = dir.turnTowards(dir2, 2.2);
+					accelerateTo(1.8 * defaultSpeed, 0.3);
 					// Creates a direction towards the danger, another direction
 					// in the opposite direction,
 					// and then turns towards the opposite direction
@@ -188,7 +194,7 @@ public class SimMareCat extends AbstractMovingObject implements IEdibleObject {
 			// best food.
 			if (obj != null) {
 				dir = dir.turnTowards(super.directionTo(obj), 2.4);
-				accelerateTo(1.8 * defaultSpeed, 0.3);
+				accelerateTo(1.8 * defaultSpeed, 0.2);
 				if (this.distanceToTouch(obj) < 5) {
 					double howMuchToEat = 1 - barValue;
 					// Eats the maximum amount it can without the bar going over
@@ -255,24 +261,36 @@ public class SimMareCat extends AbstractMovingObject implements IEdibleObject {
 			dir = dir.turnTowards(directionTo(habitat.getCenter()), 5);
 			if (!habitat.contains(getPosition(), getRadius())) {
 				// we're actually outside
-				accelerateTo(5 * defaultSpeed, 0.3);
+				accelerateTo(1.2 * defaultSpeed, 0.1);
 			}
+		}
+		}
+		else{
+			nutrition = 1000;
 		}
 
 		accelerateTo(defaultSpeed, 0.1);
 
 		if (nutrition < 0.1) {
 			super.destroy();
-			//This object will die if it's nutrition goes to far down
+			// This object will die if it's nutrition goes to far down
 		}
 		super.step();
 	}
 
 	public double angleFix(double a, double b) {
-		double angle = ((((a - b) % 360) + 540) % 360) - 180; 
+		double angle = ((((a - b) % 360) + 540) % 360) - 180;
 		return angle;
-		//This part of the code was found on stackoverflow. 
-		//It creates a double value that corresponds to an angle. It does this with two double values that it gets as input. 
+		// This part of the code was found on stackoverflow.
+		// It creates a double value that corresponds to an angle. It does this
+		// with two double values that it gets as input.
+	}
+
+	@Override
+	public void eventHappened(SimEvent event) {
+		if (event.getType().equals("Go")) {
+			dir = dir.turnTowards(directionTo((Position) event.getData()), .5);
+		}
 	}
 
 }

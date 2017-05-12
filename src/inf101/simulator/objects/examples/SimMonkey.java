@@ -10,6 +10,7 @@ import inf101.simulator.MediaHelper;
 import inf101.simulator.Position;
 import inf101.simulator.objects.AbstractMovingObject;
 import inf101.simulator.objects.IEdibleObject;
+import inf101.simulator.objects.ISimListener;
 import inf101.simulator.objects.ISimObject;
 import inf101.simulator.objects.SimEvent;
 import inf101.util.generators.DirectionGenerator;
@@ -17,10 +18,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-public class SimMonkey extends AbstractMovingObject implements IEdibleObject {
-	private static final double NUTRITION_FACTOR = 100;
+public class SimMonkey extends AbstractMovingObject implements IEdibleObject, ISimListener {
+	private static final double NUTRITION_FACTOR = 60;
 	private double size = 1.0;
-	private static final double defaultSpeed = 1.5;
+	private static final double defaultSpeed = 1.3;
 	private static Habitat habitat;
 	private Image img = MediaHelper.getImage("rafiki.png");
 	private ArrayList<IEdibleObject> bananas = new ArrayList<>();
@@ -38,6 +39,7 @@ public class SimMonkey extends AbstractMovingObject implements IEdibleObject {
 	public SimMonkey(Position pos, Habitat hab) {
 		super(new Direction(0), pos, defaultSpeed);
 		this.habitat = hab;
+		habitat.addListener(this, this);
 	}
 
 	@Override
@@ -70,6 +72,9 @@ public class SimMonkey extends AbstractMovingObject implements IEdibleObject {
 		// this object.
 		size -= deltaSize;
 		// The size decreases by "howMuch".
+		nutrition -= howMuch * NUTRITION_FACTOR;
+		// The nutrition decreases by howmuch* the nutrition factor of this
+		// object.
 		if (size == 0)
 			destroy();
 		// if the size goes all the way down to 0, this object will die.
@@ -110,19 +115,19 @@ public class SimMonkey extends AbstractMovingObject implements IEdibleObject {
 		bananas.clear();// Clears the arraylist, so that objects wont be added
 		// more than 1 time.
 		for (ISimObject obj : habitat.nearbyObjects(this, getRadius() + 400)) {
-			if (obj instanceof SimBanana){
-			// The objects that are edible for the monkey.
-			double simRepAngle = this.getPosition().directionTo(obj.getPosition()).toAngle();
-			double simAngle = this.getDirection().toAngle();
-			double angle = angleFix(simRepAngle, simAngle);
+			if (obj instanceof SimBanana) {
+				// The objects that are edible for the monkey.
+				double simRepAngle = this.getPosition().directionTo(obj.getPosition()).toAngle();
+				double simAngle = this.getDirection().toAngle();
+				double angle = angleFix(simRepAngle, simAngle);
 
-			if (angle < 45 && angle > -45) {
-				bananas.add((IEdibleObject) obj);
-				// Makes sure that the banana only will be added to the list
-				// if it's in the field of vision,
-				// 45 degrees in both directions.
+				if (angle < 45 && angle > -45) {
+					bananas.add((IEdibleObject) obj);
+					// Makes sure that the banana only will be added to the list
+					// if it's in the field of vision,
+					// 45 degrees in both directions.
+				}
 			}
-		}
 		}
 
 		if (bananas.size() == 0) {
@@ -148,28 +153,33 @@ public class SimMonkey extends AbstractMovingObject implements IEdibleObject {
 
 	@Override
 	public void step() {
+
+		
+		if(!SimFemaleLion.getCircleOfLife()){
 		steps++;
 		// Increases the step counter
-		nutrition -= 0.2;
+		nutrition -= 0.17;
 		// The objects nutrition will decrease each time step() is called.
 		barValue = nutrition / 1000;
-		//Calculates the value that will be shown in the bar over this objects head. 
+		// Calculates the value that will be shown in the bar over this objects
+		// head.
 		int hunger = hungerStatus.hungerStatus(nutrition);
-		//Find out how hungry this object is. 
-		if(hunger>1){
-		for (ISimObject danger : habitat.allObjects()) {
-			if (danger instanceof SimHyena) {
-				if (distanceTo(danger) < 200) {
-					// The cub senses danger within a certain range.
-					Direction dir1 = directionTo(danger);
-					Direction dir2 = dir1.turnBack();
-					dir = dir.turnTowards(dir2, 2.2);
-					// Creates a direction towards the danger, another direction
-					// in the opposite direction,
-					// and then turns towards the opposite direction
+		// Find out how hungry this object is.
+		if (hunger > 0) {
+			for (ISimObject danger : habitat.allObjects()) {
+				if (danger instanceof SimHyena) {
+					if (distanceTo(danger) < 200) {
+						// The cub senses danger within a certain range.
+						Direction dir1 = directionTo(danger);
+						Direction dir2 = dir1.turnBack();
+						dir = dir.turnTowards(dir2, 2.2);
+						// Creates a direction towards the danger, another
+						// direction
+						// in the opposite direction,
+						// and then turns towards the opposite direction
+					}
 				}
 			}
-		}
 		}
 
 		if (hunger == 0) {
@@ -221,7 +231,9 @@ public class SimMonkey extends AbstractMovingObject implements IEdibleObject {
 			// Creates a new direction every 200 steps and resets the steps
 			// counter
 		}
-		// go towards center if we're close to the border
+		}else{
+			nutrition = 1000;
+	}// go towards center if we're close to the border
 		if (!habitat.contains(getPosition(), getRadius() * 1.2)) {
 			dir = dir.turnTowards(directionTo(habitat.getCenter()), 5);
 			if (!habitat.contains(getPosition(), getRadius())) {
@@ -245,6 +257,13 @@ public class SimMonkey extends AbstractMovingObject implements IEdibleObject {
 		// This part of the code was found on stackoverflow.
 		// It creates a double value that corresponds to an angle. It does this
 		// with two double values that it gets as input.
+	}
+
+	@Override
+	public void eventHappened(SimEvent event) {
+		if (event.getType().equals("Go")) {
+			dir = dir.turnTowards(directionTo((Position) event.getData()), .5);
+		}
 	}
 
 }

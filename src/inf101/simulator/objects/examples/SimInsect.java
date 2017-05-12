@@ -87,6 +87,7 @@ public class SimInsect extends AbstractMovingObject implements IEdibleObject {
 
 	@Override
 	public void step() {
+		steps++;
 		if (energyLevel > 0) {
 			energyLevel -= 0.00039;
 		}

@@ -2,16 +2,15 @@ package inf101.simulator.objects.examples;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 import inf101.simulator.Direction;
-import inf101.simulator.GraphicsHelper;
 import inf101.simulator.Habitat;
 import inf101.simulator.MediaHelper;
 import inf101.simulator.Position;
 import inf101.simulator.objects.AbstractMovingObject;
 import inf101.simulator.objects.IEdibleObject;
+import inf101.simulator.objects.ISimListener;
 import inf101.simulator.objects.ISimObject;
 import inf101.simulator.objects.SimEvent;
 import inf101.util.generators.DirectionGenerator;
@@ -19,19 +18,21 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-public class SimFemaleLion extends AbstractMovingObject implements IEdibleObject {
-	private static final double defaultSpeed = 1.5;
+public class SimFemaleLion extends AbstractMovingObject implements IEdibleObject, ISimListener {
+	private static final double defaultSpeed = 1.6;
 	private static Habitat habitat;
 	private Image img = MediaHelper.getImage("sarabi.png");
 	private ArrayList<IEdibleObject> foodLion = new ArrayList<>();
 
 	private static final double NUTRITION_FACTOR = 100;
 	private double size = 1.0;
+	private static boolean circleOfLife = false;
+	private int harmony = 0;
 	private double nutrition = 1000.0;// A value for the nutrition of this
 										// object.
 	private double barValue = 1.0;// A bar that shows the health of this object.
-	private double hBar = 0.0;// A bar that shows how "horny" the male is.
-	private boolean born = false;// A boolean that shows if the cu has been born
+	private double hBar = 0.95;// A bar that shows how "horny" the male is.
+	private boolean born = false;// A boolean that shows if the cub has been born
 									// the female.
 	private int steps = 0;// The amount of steps that's been taken.
 	private static DirectionGenerator dirGen = new DirectionGenerator();// A
@@ -44,6 +45,7 @@ public class SimFemaleLion extends AbstractMovingObject implements IEdibleObject
 	public SimFemaleLion(Position pos, Habitat hab) {
 		super(new Direction(0), pos, defaultSpeed);
 		SimFemaleLion.habitat = hab;
+		this.habitat.addListener(this, this);
 	}
 
 	@Override
@@ -104,6 +106,8 @@ public class SimFemaleLion extends AbstractMovingObject implements IEdibleObject
 		//Finds the minimal value of the size and the input/nutrition factor of this object.
 		size -= deltaSize;
 		//The size decreases by "howMuch".
+		nutrition -= howMuch*NUTRITION_FACTOR;
+		//The nutrition decreases by howmuch* the nutrition factor of this object.
 		if (size == 0)
 			destroy();
 		//if the size goes all the way down to 0, this object will die.
@@ -173,13 +177,19 @@ public class SimFemaleLion extends AbstractMovingObject implements IEdibleObject
 		
 	}
 
+	public static boolean getCircleOfLife(){
+		return circleOfLife;
+	}
+	
 	@Override
 	public void step() {
+		
+		if(!circleOfLife){
 		if (born) {
 			hBar = 0;
 			//if a cub has been born, the hBar will always be 0.
 		} else {
-			hBar += 0.0009;
+//			hBar += 0.0007;
 			//The hBar will increase each time step() is called.
 			if (hBar > 1) {
 				hBar = 0;
@@ -237,12 +247,15 @@ public class SimFemaleLion extends AbstractMovingObject implements IEdibleObject
 					if (((SimMaleLion) mate).getPregnant()) {
 						habitat.addObject(new SimLionCub(this.getPosition(), habitat));
 						born = true;
+						circleOfLife = true;
 						//Checks if the male lion has impregnated her. If he has, a cub will be born on-site (added to the habitat)
 						//and sets born to be true.
 					}
 				}
 			}
 		}
+		
+		
 		if (steps == 200) {
 			Random i = new Random();
 			Direction dr = dirGen.generate(i);
@@ -257,6 +270,19 @@ public class SimFemaleLion extends AbstractMovingObject implements IEdibleObject
 				// we're actually outside
 				accelerateTo(5 * defaultSpeed, 0.3);
 			}
+		}
+		}
+		else{
+			SimEvent event = new SimEvent(this, "Go", this, habitat.getCenter());
+			habitat.triggerEvent(event);
+			harmony++;
+			
+				MediaHelper.getSound("circle.mp3").play();
+			
+			if(harmony >= 5000){
+				circleOfLife = false;
+			}
+			nutrition = 1000;
 		}
 
 		accelerateTo(defaultSpeed, 0.1);
@@ -276,5 +302,14 @@ public class SimFemaleLion extends AbstractMovingObject implements IEdibleObject
 
 	}
 
-	
+	@Override
+	public void eventHappened(SimEvent event) {
+		if (event.getType().equals("Go")) {
+			for (ISimObject rock : habitat.allObjects()){
+				if(rock instanceof SimRock){
+					dir = dir.turnTowards(this.directionTo(rock), .7);
+				}
+			}
+		}
+	}
 }

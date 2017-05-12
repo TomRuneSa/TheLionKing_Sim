@@ -10,6 +10,7 @@ import inf101.simulator.MediaHelper;
 import inf101.simulator.Position;
 import inf101.simulator.objects.AbstractMovingObject;
 import inf101.simulator.objects.IEdibleObject;
+import inf101.simulator.objects.ISimListener;
 import inf101.simulator.objects.ISimObject;
 import inf101.simulator.objects.SimEvent;
 import inf101.util.generators.DirectionGenerator;
@@ -17,7 +18,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-public class SimBird extends AbstractMovingObject implements IEdibleObject {
+public class SimBird extends AbstractMovingObject implements IEdibleObject, ISimListener {
 	private static final double defaultSpeed = 1.5;
 	private static Habitat habitat;
 	private static final double NUTRITION_FACTOR = 10;
@@ -33,6 +34,7 @@ public class SimBird extends AbstractMovingObject implements IEdibleObject {
 	public SimBird(Position pos, Habitat hab) {
 		super(new Direction(0), pos, defaultSpeed);
 		this.habitat = hab;
+		habitat.addListener(this, this);
 
 	}
 
@@ -140,6 +142,7 @@ public class SimBird extends AbstractMovingObject implements IEdibleObject {
 	public void step() {
 		boolean follow = false;
 
+		if(!SimFemaleLion.getCircleOfLife()){
 		steps++;
 		// Increases the step counter
 		nutrition -= 0.2;
@@ -219,6 +222,10 @@ public class SimBird extends AbstractMovingObject implements IEdibleObject {
 				accelerateTo(5 * defaultSpeed, 0.3);
 			}
 		}
+		}
+		else{
+			nutrition = 1000;
+	}
 
 		accelerateTo(defaultSpeed, 0.1);
 
@@ -234,6 +241,13 @@ public class SimBird extends AbstractMovingObject implements IEdibleObject {
 		return angle;
 		//This part of the code was found on stackoverflow. 
 		//It creates a double value that corresponds to an angle. It does this with two double values that it gets as input. 
+	}
+
+	@Override
+	public void eventHappened(SimEvent event) {
+		if (event.getType().equals("Go")) {
+			dir = dir.turnTowards(directionTo((Position) event.getData()), .5);
+		}
 	}
 
 }

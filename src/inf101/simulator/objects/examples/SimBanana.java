@@ -31,9 +31,13 @@ public class SimBanana extends AbstractSimObject implements IEdibleObject {
 	@Override
 	public double eat(double howMuch) {
 		double deltaSize = Math.min(size, howMuch / NUTRITION_FACTOR);
+		// Finds the minimal value of the size and the input/nutrition factor of
+		// this object.
 		size -= deltaSize;
+		// The size decreases by "howMuch".
 		if (size == 0)
 			destroy();
+		// if the size goes all the way down to 0, this object will die.
 		return deltaSize * NUTRITION_FACTOR;
 	}
 
@@ -54,6 +58,8 @@ public class SimBanana extends AbstractSimObject implements IEdibleObject {
 	@Override
 	public double getNutritionalValue() {
 		return size * NUTRITION_FACTOR;
+		// Returns the nutrition value of this object, if someone wants to eat
+		// it, they know how much it can eat.
 	}
 
 }

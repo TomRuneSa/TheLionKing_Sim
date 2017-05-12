@@ -8,13 +8,8 @@ import org.junit.Test;
 import inf101.simulator.Habitat;
 import inf101.simulator.Position;
 import inf101.simulator.SimMain;
-import inf101.simulator.objects.examples.SimAnimal;
 import inf101.simulator.objects.examples.SimBird;
-import inf101.simulator.objects.examples.SimHyena;
 import inf101.simulator.objects.examples.SimInsect;
-import inf101.simulator.objects.examples.SimMareCat;
-import inf101.simulator.objects.examples.SimRepellant;
-import inf101.simulator.objects.examples.SimWarthog;
 
 public class SimBirdTest {
 	private SimMain main;

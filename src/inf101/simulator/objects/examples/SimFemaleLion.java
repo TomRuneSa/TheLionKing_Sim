@@ -277,7 +277,7 @@ public class SimFemaleLion extends AbstractMovingObject implements IEdibleObject
 			habitat.triggerEvent(event);
 			harmony++;
 			
-				MediaHelper.getSound("circle.mp3").play();
+				MediaHelper.getSound("circle.wav").play();
 			
 			if(harmony >= 5000){
 				circleOfLife = false;

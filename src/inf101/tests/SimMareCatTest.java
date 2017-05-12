@@ -84,25 +84,6 @@ public class SimMareCatTest {
 	}
 
 	/**
-	 * Test scenario: Places marecat and a warthog in a habitat, and sets their
-	 * position. After 500 steps the marecat should be facing the warthog.
-	 */
-	@Test
-	public void willFollowTest() {
-		Habitat hab = new Habitat(main, 500, 500);
-		SimMareCat sim1 = new SimMareCat(new Position(250, 250), hab);
-		SimWarthog sim2 = new SimWarthog(new Position(260, 250), hab);
-		hab.addObject(sim1);
-		hab.addObject(sim2);
-
-		for (int i = 0; i < 500; i++) {
-			hab.step();
-		}
-		assertTrue(Math.abs(
-				sim1.getPosition().directionTo(sim2.getPosition()).toAngle() - sim1.getDirection().toAngle()) < 10);
-	}
-
-	/**
 	 * Test scenario: check that marecat avoid hyenas
 	 */
 	@Test

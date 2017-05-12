@@ -26,7 +26,7 @@ public class SimMaleLion extends AbstractMovingObject implements IEdibleObject, 
 
 	private static final double NUTRITION_FACTOR = 100;
 	private double size = 1.0;
-	private double hBar = 0.95;// A bar that shows how "horny" the male is.
+	private double hBar = 0.0;// A bar that shows how "horny" the male is.
 	private boolean impregnate = false;// A boolean that shows if the male has
 										// impregnated the female.
 	private boolean born = false;// A boolean that checks if a lioncub has been
@@ -191,7 +191,7 @@ public class SimMaleLion extends AbstractMovingObject implements IEdibleObject, 
 			hBar = 0;
 			// if a cub has been born, the hBar will always be 0.
 		} else {
-//			hBar += 0.0009;
+			hBar += 0.0009;
 			// The hBar will increase each time step() is called.
 			if (hBar > 1) {
 				hBar = 0;

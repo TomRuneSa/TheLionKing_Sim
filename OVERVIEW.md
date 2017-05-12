@@ -21,16 +21,16 @@ Common for all moving objects is their healthbar. Every object this accounts for
 		- The female lion has the mostly the same traits as the male. The exception is that when the female is ready 		to mate, she doesn't go searching for a male, she let's the male come to her. If she get's impregnated, she 		will "give birth" to a lion cub. However, she will only do this as long as she's not hungry or starving. The 		female lion is more independent than the male, as she doesn't have anyone following her. 
 		
 - Cub
-		- The cub does not spawn from the beginning, it only appears when the male and female lion is ready for it. 		When the cub is born, it will try to find it's father. If it finds the father, it will follow the father 		until it get's hungry, then it will break away from the father and look foor food. It has the same eating 		traits as its mother and father, except it doesn't eat hyenas, but insect in addition to warthogs and 		marecats.
+		- The cub does not spawn from the beginning, it only appears when the male and female lion is ready for it. 		When the cub is born, it will try to find it's father. If it finds the father, it will follow the father 		until it get's hungry, then it will break away from the father and look foor food. It has the same eating 		traits as its mother and father, except it doesn't eat hyenas, but insect in addition to warthogs and 		marecats. 
 		
 - Monkey 
 		- As long as the monkey isn't hungry or starving it'll just walk around aimlessly, but try to avoid hyenas, 		since hyenas can eat the monkey. When the monkey is hungry or starving, it'll search for bananas and eat them.
 		 
 - Warthog
-		- The warthog only walks around trying to avoid hyenas and male/female lions when it's not hungry. If it is 		hungry, it looks for food. The only food it'll eat is insects. If the marecat dies, the warthog will, out of 		grief, commit suicide.
+		- The warthog only walks around trying to avoid hyenas and male/female lions when it's not hungry. If it is 		hungry, it looks for food. The only food it'll eat is insects. 
 		
 - Marecat
-		- The marecat is quite similar to the warthog when it comes to eating. If the marecat isn't looking for food 		it searches for the warthog, as the marecat think that the warthog can protect it. But the warthog does 		nothing to protect the marecat. If the warthog dies, the marecat will commit suicide to avoid beeing eaten.
+		- The marecat is quite similar to the warthog when it comes to eating. If the marecat isn't looking for food 		it searches for the warthog, as the marecat think that the warthog can protect it. But the warthog does 		nothing to protect the marecat. 
 		
 - Insect
 		- The insects does nothing but being eaten. The insect just walks around with no meaning and doesn't try to avoid anything. 
@@ -39,7 +39,7 @@ Common for all moving objects is their healthbar. Every object this accounts for
 		- The bird looks for the male lionBut once the bird gets hungry, it strays away from the lion and looks for 		food. 
 		
 - Hyena
-		- The hyena is the most dangerous animal after the lions. It can eat anything. But it doesn't eat insect, 		because it doesn't like them, and it doesn't eat the lion cub, in fear of the male lion. If the hyena isn't 		hungry, it will look for other hyenas, because hyenas are stronger in a pack. If a hyena is starving, it'll get 		desperate enough to go after a lion, if the pack has 3 or more members.
+		- The hyena is the most dangerous animal after the lions. It can eat anything. But it doesn't eat insect, 		because it doesn't like them, and it doesn't eat the lion cub, because it doesn't hurt children.. If the hyena isn't 		hungry, it will look for other hyenas, because hyenas are stronger in a pack. If a hyena is starving, it'll get 		desperate enough to go after a lion, if the pack has 3 or more members.
 		
 - Bananatree
 		- The bananatree will grow a certain amount each step, and when it's big enough, it will give a banana.
@@ -78,10 +78,16 @@ Common for all moving objects is their healthbar. Every object this accounts for
 	If the lion is moderately hungry, it will search for warthogs, marecats and hyenas to eat. It will go for the best 	food it can see. If the lion is starving, it will search for the same animals to eat, but instead of going for the 	best one, it will go for the closest one so it'll get food as fast as possible.
 
 -Cub
-	- When the cub is born, it'll be born without beeing hungry, a mere miracle. As long as he's not hungry, he will by default look for his father, and follow him. But if he is following his father, and gets hungry, he will stray away so that he can look for food. The cub eats warthogs, marecats and insects. The order of eating is the same as the male and female lion. If hes moderately hungry, he'll go for the closest food, if hes starving he'll go for the closest food.
+	- When the cub is born, it'll be born without beeing hungry, a mere miracle. As long as he's not hungry, he will by default look for his father, and follow him. But if he is following his father, and gets hungry, he will stray away so that he can look for food. The cub eats warthogs, marecats and insects. The order of eating is the same as the male and female lion. If hes moderately hungry, he'll go for the closest food, if hes starving he'll go for the closest food. The cub cannot be eaten by anyone, as no one will hurt a cub. 
 	
 - Monkey
-	- If the monkey is full, he will walk around aimlesly, and try to avoid 
+	- If the monkey is full, he will walk around aimlesly, and try to avoid hyenas. If he's not full, he'll look for bananas. 
+	
+- Warthog
+	- The warthog is kind of stupid, he only thinks about two things: Food, and avoid beeing eaten by hyenas or lions. When he's not hungry he'll walk around minding his own business. When he does get hungry, he'll go looking for insects to eat.
+	
+- Marecat
+	- The marecat is always trying to follow the warthog as long as the marecat isn't hungry. He searches for the warthog as far as he can see, and then follows him until he gets hungry. When its hungry it'll stray away from the warthog and go look for insects to eat. He will try to aviod hyenas and lions to the best of his abilities. 
 	
 
 ## Svar på spørsmål

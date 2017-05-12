@@ -83,11 +83,14 @@ public class SimWarthogTest {
 	
 	/**
 	 * Test scenario: check that Warthog avoid hyenas
+	 * 
+	 * Issue: It may happen that the warthog will get stuck between the edge of the habitat and the hyena,
+	 * If that happens, the test will fail, because it'll get to close to the hyena.
 	 */
 	@Test
 	public void avoidHyenas() {
 		Habitat hab = new Habitat(main, 1000, 1000);
-		SimWarthog sim1 = new SimWarthog(new Position(1000, 1000), hab);
+		SimWarthog sim1 = new SimWarthog(new Position(100, 1000), hab);
 		SimHyena hyena = new SimHyena(new Position(0, 500), hab, 2.3);
 		hab.addObject(sim1);
 		hab.addObject(hyena);

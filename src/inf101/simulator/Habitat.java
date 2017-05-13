@@ -355,9 +355,10 @@ public class Habitat {
 	public void step() {
 		// for(int i = 0; i < ducks.size(); i++)
 		// ducks.get(i).step();
+		
 
 		hoveredObject = null;
-		for (ISimObject obj : objects) {
+		for (ISimObject obj : new ArrayList<>(objects)) {
 			if (obj.exists()) {
 				obj.step();
 			}
@@ -387,7 +388,6 @@ public class Habitat {
 	 */
 	public void triggerEvent(SimEvent event) {
 		for (Pair<ISimObject, ISimListener> l : listeners) {
-			if (l.t != event.getSource())
 				l.u.eventHappened(event);
 		}
 	}

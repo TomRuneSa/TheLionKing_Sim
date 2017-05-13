@@ -21,6 +21,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Lighting;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
@@ -39,9 +40,10 @@ import javafx.stage.Stage;
  *
  */
 public class SimMain extends Application {
+	private Image img = MediaHelper.getImage("savannah.jpg");
 	public static final double NOMINAL_WIDTH = 1900;
-	private static final double MENU_WIDTH = 100.00;
-	private static final double BUTTON_WIDTH = 75.00;
+	private static final double MENU_WIDTH = 43.00;
+	private static final double BUTTON_WIDTH = 30.00;
 	private static SimMain instance;
 	private static Map<String, ISimObjectFactory> factoryMap = new HashMap<>();
 	public static SimMain getInstance() {
@@ -185,9 +187,11 @@ public class SimMain extends Application {
 	}
 
 	private void drawBackground(GraphicsContext context) {
-		context.setFill(Color.BLACK);
+		context.translate(0, habitat.getHeight());
+		context.scale(1, -1);
+		context.drawImage(img, 0,0, habitat.getWidth(), habitat.getHeight());
 		// context.fillRect(0, 0, bgCanvas.getWidth(), bgCanvas.getHeight());
-		context.fillRect(0, 0, habitat.getWidth(), habitat.getHeight());
+//		context.fillRect(0, 0, habitat.getWidth(), habitat.getHeight());
 	}
 
 	/**

@@ -576,3 +576,4 @@ A: Du får ikke lov å gjøre endringer på objects-listen mens for-løkken kjø
 * 
 
 
+# TheLionKing_Sim

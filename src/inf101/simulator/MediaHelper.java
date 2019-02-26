@@ -12,10 +12,6 @@ import javafx.scene.image.Image;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
-/**
- * @author anya
- *
- */
 public class MediaHelper {
 	private final static Map<String, Image> images = new HashMap<>();
 	private final static Map<String, MediaPlayer> sounds = new HashMap<>();
